@@ -936,50 +936,83 @@
             return requirements.every(req => isRequirementMet(req));
         }
         
-        // Update finish button state
-        function updateFinishButtonState() {
-            const requirements = gameState.selectedEvent.requirements;
-            const requirementsMet = checkRequirementsMet(requirements);
-            
-            if (!requirementsMet) {
-                finishPlanningButton.classList.add('disabled');
-                finishPlanningButton.title = 'You must fulfill all event requirements before finishing';
-            } else {
-                finishPlanningButton.classList.remove('disabled');
-                finishPlanningButton.title = '';
-            }
-        }
+// Update the finish button state and message
+function updateFinishButtonState() {
+    const requirements = gameState.selectedEvent.requirements;
+    const missingRequirements = getMissingRequirements(requirements);
+    
+    if (missingRequirements.length > 0) {
+        // Some requirements are not met, but we'll still allow finishing
+        finishPlanningButton.classList.remove('disabled');
+        finishPlanningButton.title = `Warning: Missing ${missingRequirements.join(', ')}`;
         
-        // Finish planning the event and go to results
-        function finishPlanning(e) {
-            // Check if requirements are met
-            const requirements = gameState.selectedEvent.requirements;
-            const requirementsMet = checkRequirementsMet(requirements);
+        // Add a visual warning indicator
+        finishPlanningButton.style.backgroundColor = '#FFA500'; // Orange warning color
+    } else {
+        // All requirements met
+        finishPlanningButton.classList.remove('disabled');
+        finishPlanningButton.style.backgroundColor = 'var(--primary-color)';
+        finishPlanningButton.title = 'All requirements are met. Ready to finish.';
+    }
+}
+
+// Get a list of missing requirements
+function getMissingRequirements(requirements) {
+    return requirements.filter(req => !isRequirementMet(req));
+}
+
+// Finish planning the event and go to results
+function finishPlanning(e) {
+    e.preventDefault();
+    
+    // Check if requirements are met
+    const requirements = gameState.selectedEvent.requirements;
+    const missingRequirements = getMissingRequirements(requirements);
+    
+    if (missingRequirements.length > 0) {
+        // First click - warn about missing requirements
+        if (!gameState.warnedAboutRequirements) {
+            gameState.warnedAboutRequirements = true;
             
-            if (!requirementsMet) {
-                e.preventDefault();
-                alert('You must fulfill all event requirements before finishing!');
+            const warningMessage = `Warning: Your event is missing the following requirements: ${missingRequirements.join(', ')}. 
+            
+This will result in lower attendee satisfaction and reduced XP. 
+
+Are you sure you want to continue?`;
+            
+            if (!confirm(warningMessage)) {
+                // User canceled, reset the warning flag
+                gameState.warnedAboutRequirements = false;
                 return;
             }
             
-            // Store event data in localStorage for results page
-            const eventData = {
-                event: gameState.selectedEvent,
-                venue: gameState.selectedVenue,
-                items: gameState.selectedItems,
-                quality: gameState.qualityInvestment,
-                marketing: gameState.marketingInvestment,
-                staff: gameState.staffInvestment,
-                totalCost: gameState.spentAmount,
-                estimatedRating: parseInt(estimatedRatingElement.textContent),
-                sustainability: parseInt(sustainabilityScoreElement.textContent)
-            };
-            
-            localStorage.setItem('eventResults', JSON.stringify(eventData));
-            
-            // Redirect to results page
-            window.location.href = 'results.html';
+            // User confirmed, but we'll let them continue
+            gameState.missingRequirements = missingRequirements;
         }
+    } else {
+        // All requirements met
+        gameState.missingRequirements = [];
+    }
+    
+    // Store event data in localStorage for results page
+    const eventData = {
+        event: gameState.selectedEvent,
+        venue: gameState.selectedVenue,
+        items: gameState.selectedItems,
+        quality: gameState.qualityInvestment,
+        marketing: gameState.marketingInvestment,
+        staff: gameState.staffInvestment,
+        totalCost: gameState.spentAmount,
+        estimatedRating: parseInt(estimatedRatingElement.textContent),
+        sustainability: parseInt(sustainabilityScoreElement.textContent),
+        missingRequirements: gameState.missingRequirements || []
+    };
+    
+    localStorage.setItem('eventResults', JSON.stringify(eventData));
+    
+    // Redirect to results page
+    window.location.href = 'results.html';
+}
         
         // Initialize when the page loads
         document.addEventListener('DOMContentLoaded', init);

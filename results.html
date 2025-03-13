@@ -438,40 +438,84 @@
             return requirements.every(req => isRequirementMet(req, items));
         }
         
-        // Process event outcome
-        function processEventOutcome(results) {
-            // Check if the event was successful
-            const isSuccessful = results.finalSustainability >= 50 && 
-                                checkRequirementsMet(results.event.requirements, results.items);
-            
-            // Set result status
-            if (isSuccessful) {
-                resultStatusElement.innerHTML = '<h3 style="color: green;">Event Successful!</h3>';
-            } else {
-                resultStatusElement.innerHTML = '<h3 style="color: red;">Event Failed!</h3>';
-            }
-            
-            // Calculate XP earned
-            let xpEarned = calculateXP(results, isSuccessful);
-            
-            // Set feedback message
-            setFeedbackMessage(results, isSuccessful);
-            
-            // Update player stats
-            updatePlayerStats(xpEarned, results);
-            
-            // Check for level up
-            checkLevelUp();
-            
-            // Update XP display
-            xpEarnedElement.textContent = xpEarned;
-            const xpProgress = (gameState.playerXP / gameState.xpToNextLevel) * 100;
-            xpProgressElement.style.width = `${xpProgress}%`;
-            xpProgressElement.textContent = `${Math.round(xpProgress)}%`;
-            
-            // Save updated game state
-            localStorage.setItem('gameState', JSON.stringify(gameState));
+        // Process event outcome with missing requirements feedback
+function processEventOutcome(results) {
+    // Update the feedback message based on requirements
+    const hasAllRequirements = !results.missingRequirements || results.missingRequirements.length === 0;
+    
+    // Set result status
+    if (results.finalSustainability >= 50) {
+        if (hasAllRequirements) {
+            resultStatusElement.innerHTML = '<h3 style="color: green;">Event Successful!</h3>';
+        } else {
+            resultStatusElement.innerHTML = '<h3 style="color: orange;">Event Partially Successful</h3>';
         }
+    } else {
+        resultStatusElement.innerHTML = '<h3 style="color: red;">Event Failed!</h3>';
+    }
+    
+    // Calculate XP earned with penalty for missing requirements
+    let xpEarned = calculateXP(results, results.finalSustainability >= 50);
+    
+    // Apply penalty for missing requirements
+    if (!hasAllRequirements) {
+        const missingRequirementsCount = results.missingRequirements.length;
+        const requirementsPenalty = 0.25 * missingRequirementsCount; // 25% penalty per missing requirement
+        const originalXP = xpEarned;
+        xpEarned = Math.max(5, Math.round(xpEarned * (1 - requirementsPenalty)));
+        
+        if (results.missingRequirements) {
+            // Add to feedback about missing requirements
+            const missingItems = results.missingRequirements.join(', ');
+            const requirementFeedback = `
+                <div class="missing-requirements-feedback" style="background-color: #fff3cd; padding: 10px; border-left: 4px solid #ffc107; margin-top: 15px;">
+                    <p><strong>Attendee Feedback:</strong> Several attendees complained about the lack of ${missingItems}. This reduced your XP gain from ${originalXP} to ${xpEarned}.</p>
+                </div>
+            `;
+            feedbackMessageElement.innerHTML += requirementFeedback;
+        }
+    }
+    
+    // Set feedback message
+    setFeedbackMessage(results, results.finalSustainability >= 50);
+    
+    // Update player stats
+    updatePlayerStats(xpEarned, results);
+    
+    // Check for level up
+    checkLevelUp();
+    
+    // Update XP display
+    xpEarnedElement.textContent = xpEarned;
+    const xpProgress = (gameState.playerXP / gameState.xpToNextLevel) * 100;
+    xpProgressElement.style.width = `${xpProgress}%`;
+    xpProgressElement.textContent = `${Math.round(xpProgress)}%`;
+    
+    // Save updated game state
+    localStorage.setItem('gameState', JSON.stringify(gameState));
+}
+
+// Display requirements checklist with clearer indicators
+function displayRequirements(requirements, items, missingRequirements) {
+    requirementsChecklistElement.innerHTML = '';
+    
+    requirements.forEach(req => {
+        const li = document.createElement('li');
+        li.className = 'requirement-item';
+        
+        const isMet = isRequirementMet(req, items);
+        
+        if (isMet) {
+            li.className += ' met';
+            li.innerHTML = `<span style="color: green; font-weight: bold;">✓</span> ${req}`;
+        } else {
+            li.className += ' not-met';
+            li.innerHTML = `<span style="color: red; font-weight: bold;">✗</span> ${req} <span style="color: red; font-style: italic;">(Missing)</span>`;
+        }
+        
+        requirementsChecklistElement.appendChild(li);
+    });
+}
         
         // Calculate XP earned
         function calculateXP(results, isSuccessful) {

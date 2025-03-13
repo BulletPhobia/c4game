@@ -259,59 +259,115 @@
             }
         ];
         
-        // Venue options
-        const venueOptions = [
-            {
-                id: "main-hall",
-                title: "Main Building Hallway",
-                description: "A busy hallway in the main building with good foot traffic for booths and small displays.",
-                cost: 50,
-                capacity: 60,
-                sustainability: 70,
-                suitableFor: ["booth"],
-                features: ["High Visibility", "Limited Space", "No Privacy"]
-            },
-            {
-                id: "classroom-small",
-                title: "Small Classroom",
-                description: "A standard classroom that can fit up to 25 people comfortably. Good for small meetings and workshops.",
-                cost: 75,
-                capacity: 25,
-                sustainability: 65,
-                suitableFor: ["club", "workshop"],
-                features: ["Whiteboard", "Projector", "Chairs and Tables"]
-            },
-            {
-                id: "classroom-large",
-                title: "Large Classroom",
-                description: "A larger classroom that can accommodate up to 40 people. Suitable for workshops and small events.",
-                cost: 100,
-                capacity: 40,
-                sustainability: 60,
-                suitableFor: ["workshop", "gamenight"],
-                features: ["Whiteboard", "Projector", "Chairs and Tables", "More Space"]
-            },
-            {
-                id: "student-lounge",
-                title: "Student Lounge",
-                description: "A casual space with comfortable seating and a relaxed atmosphere. Perfect for social gatherings.",
-                cost: 80,
-                capacity: 35,
-                sustainability: 75,
-                suitableFor: ["club", "gamenight"],
-                features: ["Comfortable Seating", "Casual Atmosphere", "Some Tables"]
-            },
-            {
-                id: "eco-garden",
-                title: "Campus Eco Garden",
-                description: "An outdoor space with a sustainable garden. Great for environmentally-themed events.",
-                cost: 40,
-                capacity: 50,
-                sustainability: 95,
-                suitableFor: ["booth", "club"],
-                features: ["Outdoor Setting", "Natural Environment", "Weather Dependent"]
-            }
-        ];
+      // Venue options with sustainability scaled based on size
+const venueOptions = [
+    {
+        id: "main-hall",
+        title: "Main Building Hallway",
+        description: "A busy hallway in the main building with good foot traffic for booths and small displays.",
+        cost: 50,
+        capacity: 60,
+        sizeCategory: "Medium",
+        baseRent: 50,
+        baseSustainability: 70, // Base sustainability value
+        sizeEfficiency: 1.0,    // Efficiency multiplier for size
+        suitableFor: ["booth"],
+        features: ["High Visibility", "Limited Space", "No Privacy"]
+    },
+    {
+        id: "classroom-small",
+        title: "Small Classroom",
+        description: "A standard classroom that can fit up to 25 people comfortably. Good for small meetings and workshops.",
+        cost: 75,
+        capacity: 25,
+        sizeCategory: "Small",
+        baseRent: 75,
+        baseSustainability: 65,
+        sizeEfficiency: 1.2,    // Small venues are more efficient/sustainable
+        suitableFor: ["club", "workshop"],
+        features: ["Whiteboard", "Projector", "Chairs and Tables"]
+    },
+    {
+        id: "classroom-large",
+        title: "Large Classroom",
+        description: "A larger classroom that can accommodate up to 40 people. Suitable for workshops and small events.",
+        cost: 100,
+        capacity: 40,
+        sizeCategory: "Medium",
+        baseRent: 100,
+        baseSustainability: 60,
+        sizeEfficiency: 1.0,
+        suitableFor: ["workshop", "gamenight"],
+        features: ["Whiteboard", "Projector", "Chairs and Tables", "More Space"]
+    },
+    {
+        id: "student-lounge",
+        title: "Student Lounge",
+        description: "A casual space with comfortable seating and a relaxed atmosphere. Perfect for social gatherings.",
+        cost: 80,
+        capacity: 35,
+        sizeCategory: "Medium",
+        baseRent: 80,
+        baseSustainability: 75,
+        sizeEfficiency: 1.0,
+        suitableFor: ["club", "gamenight"],
+        features: ["Comfortable Seating", "Casual Atmosphere", "Some Tables"]
+    },
+    {
+        id: "eco-garden",
+        title: "Campus Eco Garden",
+        description: "An outdoor space with a sustainable garden. Great for environmentally-themed events.",
+        cost: 40,
+        capacity: 50,
+        sizeCategory: "Large",
+        baseRent: 40,
+        baseSustainability: 95,
+        sizeEfficiency: 0.9,    // Large venues are less efficient
+        suitableFor: ["booth", "club"],
+        features: ["Outdoor Setting", "Natural Environment", "Weather Dependent"]
+    },
+    {
+        id: "auditorium",
+        title: "Small Auditorium",
+        description: "A formal presentation space with fixed seating and good acoustics.",
+        cost: 150,
+        capacity: 100,
+        sizeCategory: "Large",
+        baseRent: 150,
+        baseSustainability: 55,
+        sizeEfficiency: 0.8,    // Large venues are less efficient
+        suitableFor: ["gamenight"],
+        features: ["Professional Setup", "Good Acoustics", "Fixed Seating"]
+    },
+    {
+        id: "conference-room",
+        title: "Conference Room",
+        description: "A professional meeting space with a large table and presentation equipment.",
+        cost: 120,
+        capacity: 20,
+        sizeCategory: "Small",
+        baseRent: 120,
+        baseSustainability: 70,
+        sizeEfficiency: 1.3,    // Small venues are more efficient
+        suitableFor: ["club"],
+        features: ["Professional Environment", "Privacy", "Tech Equipment"]
+    }
+];
+
+// Calculate effective sustainability based on size
+function calculateVenueSustainability() {
+    // Update each venue's sustainability and cost based on size efficiency
+    venueOptions.forEach(venue => {
+        // Calculate effective sustainability
+        venue.sustainability = Math.min(100, Math.round(venue.baseSustainability * venue.sizeEfficiency));
+        
+        // Update cost based on base rent
+        venue.cost = venue.baseRent;
+    });
+}
+
+// Call this function when initializing the venues page
+calculateVenueSustainability();
         
         // DOM elements
         const playerLevelElement = document.getElementById('player-level');
@@ -374,86 +430,128 @@
             eventRequirementsElement.textContent = gameState.selectedEvent.requirements.join(', ');
         }
         
-        // Generate venue cards
-        function generateVenueCards() {
-            venueListElement.innerHTML = '';
-            
-            // Filter venues suitable for the selected event
-            const suitableVenues = venueOptions.filter(venue => 
-                venue.suitableFor.includes(gameState.selectedEvent.id) && 
-                venue.capacity >= gameState.selectedEvent.attendees
-            );
-            
-            // Add some less suitable venues for variety
-            const otherVenues = venueOptions
-                .filter(venue => !suitableVenues.includes(venue) && venue.capacity >= gameState.selectedEvent.attendees * 0.8)
-                .slice(0, 2);
-            
-            const displayVenues = [...suitableVenues, ...otherVenues];
-            
-            // Create a card for each venue
-            displayVenues.forEach(venue => {
-                const card = document.createElement('div');
-                card.className = 'venue-card';
-                
-                // Add a special class for suitable venues
-                if (venue.suitableFor.includes(gameState.selectedEvent.id)) {
-                    card.style.borderLeft = '4px solid var(--primary-color)';
-                }
-                
-                const title = document.createElement('h3');
-                title.className = 'venue-title';
-                title.textContent = venue.title;
-                
-                const description = document.createElement('p');
-                description.className = 'venue-description';
-                description.textContent = venue.description;
-                
-                const details = document.createElement('div');
-                details.className = 'venue-details';
-                
-                const costDetail = document.createElement('span');
-                costDetail.className = 'venue-detail';
-                costDetail.textContent = `Cost: $${venue.cost}`;
-                
-                const capacityDetail = document.createElement('span');
-                capacityDetail.className = 'venue-detail';
-                capacityDetail.textContent = `Capacity: ${venue.capacity}`;
-                
-                const sustainabilityDetail = document.createElement('span');
-                sustainabilityDetail.className = 'venue-detail';
-                sustainabilityDetail.textContent = `Sustainability: ${venue.sustainability}%`;
-                
-                details.appendChild(costDetail);
-                details.appendChild(capacityDetail);
-                details.appendChild(sustainabilityDetail);
-                
-                const features = document.createElement('div');
-                features.style.marginBottom = '15px';
-                
-                const featuresTitle = document.createElement('strong');
-                featuresTitle.textContent = 'Features: ';
-                features.appendChild(featuresTitle);
-                features.appendChild(document.createTextNode(venue.features.join(', ')));
-                
-                const selectButton = document.createElement('div');
-                selectButton.className = 'venue-select';
-                
-                const button = document.createElement('a');
-                button.href = `planning.html?event=${gameState.selectedEvent.id}&venue=${venue.id}`;
-                button.className = 'btn';
-                button.textContent = 'Select Venue';
-                selectButton.appendChild(button);
-                
-                card.appendChild(title);
-                card.appendChild(description);
-                card.appendChild(details);
-                card.appendChild(features);
-                card.appendChild(selectButton);
-                
-                venueListElement.appendChild(card);
-            });
+        // Updated function to generate venue cards with size efficiency information
+function generateVenueCards() {
+    venueListElement.innerHTML = '';
+    
+    // Filter venues suitable for the selected event
+    const suitableVenues = venueOptions.filter(venue => 
+        venue.suitableFor.includes(gameState.selectedEvent.id) && 
+        venue.capacity >= gameState.selectedEvent.attendees
+    );
+    
+    // Add some less suitable venues for variety
+    const otherVenues = venueOptions
+        .filter(venue => !suitableVenues.includes(venue) && venue.capacity >= gameState.selectedEvent.attendees * 0.8)
+        .slice(0, 2);
+    
+    const displayVenues = [...suitableVenues, ...otherVenues];
+    
+    // Create a card for each venue
+    displayVenues.forEach(venue => {
+        // Calculate sustainability based on size efficiency if not already done
+        if (!venue.sustainability) {
+            venue.sustainability = Math.min(100, Math.round(venue.baseSustainability * venue.sizeEfficiency));
         }
+        
+        const card = document.createElement('div');
+        card.className = 'venue-card';
+        
+        // Add a special class for suitable venues
+        if (venue.suitableFor.includes(gameState.selectedEvent.id)) {
+            card.style.borderLeft = '4px solid var(--primary-color)';
+        }
+        
+        const title = document.createElement('h3');
+        title.className = 'venue-title';
+        title.textContent = venue.title;
+        
+        const description = document.createElement('p');
+        description.className = 'venue-description';
+        description.textContent = venue.description;
+        
+        const details = document.createElement('div');
+        details.className = 'venue-details';
+        
+        const sizeDetail = document.createElement('span');
+        sizeDetail.className = 'venue-detail';
+        sizeDetail.textContent = `Size: ${venue.sizeCategory}`;
+        
+        const costDetail = document.createElement('span');
+        costDetail.className = 'venue-detail';
+        costDetail.textContent = `Cost: $${venue.cost}`;
+        
+        const capacityDetail = document.createElement('span');
+        capacityDetail.className = 'venue-detail';
+        capacityDetail.textContent = `Capacity: ${venue.capacity}`;
+        
+        const sustainabilityDetail = document.createElement('span');
+        sustainabilityDetail.className = 'venue-detail';
+        
+        // Add a tooltip to explain the sustainability calculation
+        const sustainabilityTooltip = `Base: ${venue.baseSustainability}% × Size Efficiency: ${venue.sizeEfficiency}`;
+        sustainabilityDetail.setAttribute('title', sustainabilityTooltip);
+        sustainabilityDetail.textContent = `Sustainability: ${venue.sustainability}%`;
+        
+        // Apply color coding to sustainability
+        if (venue.sustainability >= 90) {
+            sustainabilityDetail.style.color = 'green';
+            sustainabilityDetail.style.fontWeight = 'bold';
+        } else if (venue.sustainability >= 75) {
+            sustainabilityDetail.style.color = '#4CAF50'; // Lighter green
+        } else if (venue.sustainability >= 50) {
+            sustainabilityDetail.style.color = 'orange';
+        } else {
+            sustainabilityDetail.style.color = 'red';
+        }
+        
+        details.appendChild(sizeDetail);
+        details.appendChild(costDetail);
+        details.appendChild(capacityDetail);
+        details.appendChild(sustainabilityDetail);
+        
+        const efficiencyInfo = document.createElement('p');
+        efficiencyInfo.style.fontSize = '14px';
+        efficiencyInfo.style.fontStyle = 'italic';
+        
+        // Explain the size efficiency
+        if (venue.sizeEfficiency > 1) {
+            efficiencyInfo.textContent = `Smaller venues are more energy-efficient relative to capacity.`;
+            efficiencyInfo.style.color = 'green';
+        } else if (venue.sizeEfficiency < 1) {
+            efficiencyInfo.textContent = `Larger venues use more resources per person.`;
+            efficiencyInfo.style.color = '#FF9800'; // Orange
+        } else {
+            efficiencyInfo.textContent = `This venue has average energy efficiency.`;
+        }
+        
+        const features = document.createElement('div');
+        features.style.marginBottom = '15px';
+        
+        const featuresTitle = document.createElement('strong');
+        featuresTitle.textContent = 'Features: ';
+        features.appendChild(featuresTitle);
+        features.appendChild(document.createTextNode(venue.features.join(', ')));
+        
+        const selectButton = document.createElement('div');
+        selectButton.className = 'venue-select';
+        
+        const button = document.createElement('a');
+        button.href = `planning.html?event=${gameState.selectedEvent.id}&venue=${venue.id}`;
+        button.className = 'btn';
+        button.textContent = 'Select Venue';
+        selectButton.appendChild(button);
+        
+        card.appendChild(title);
+        card.appendChild(description);
+        card.appendChild(details);
+        card.appendChild(efficiencyInfo);
+        card.appendChild(features);
+        card.appendChild(selectButton);
+        
+        venueListElement.appendChild(card);
+    });
+}
         
         // Initialize when the page loads
         document.addEventListener('DOMContentLoaded', init);
