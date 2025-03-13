@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planning - Sustainable Event Organizer</title>
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --secondary-color: #81c784;
+            --light-color: #e8f5e9;
+            --dark-color: #1b5e20;
+            --accent-color: #ffeb3b;
+            --text-color: #212121;
+            --white: #ffffff;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light-color);
+            color: var(--text-color);
+            touch-action: manipulation;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1, h2, h3 {
+            color: var(--primary-color);
+        }
+        
+        .container {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 15px 0;
+            transition: background-color 0.3s;
+            display: inline-block;
+            text-decoration: none;
+        }
+        
+        .btn:hover {
+            background-color: var(--dark-color);
+        }
+        
+        .disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-box {
+            background-color: var(--light-color);
+            padding: 10px;
+            border-radius: 4px;
+            min-width: 100px;
+            text-align: center;
+            margin-bottom: 10px;
+            flex: 1 1 200px;
+            margin: 5px;
+        }
+        
+        .progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        
+        .progress-bar {
+            height: 20px;
+            border-radius: 5px;
+            background-color: var(--secondary-color);
+            text-align: center;
+            line-height: 20px;
+            color: var(--white);
+            transition: width 0.5s;
+        }
+        
+        .event-info {
+            background-color: var(--light-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .slider-container {
+            margin: 15px 0;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            margin: 10px 0;
+        }
+        
+        .item-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .item-card {
+            background-color: var(--light-color);
+            border-radius: 4px;
+            padding: 10px;
+            position: relative;
+        }
+        
+        .item-card button {
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .menu-button {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: var(--light-color);
+            border: none;
+            border-radius: 4px 4px 0 0;
+            margin-right: 5px;
+        }
+        
+        .tab.active {
+            background-color: var(--secondary-color);
+            color: var(--white);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .selected-items {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: var(--light-color);
+            border-radius: 8px;
+        }
+        
+        .finish-button {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .category-filter {
+            margin-bottom: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .category-button {
+            padding: 5px 10px;
+            background-color: var(--light-color);
+            border: 1px solid var(--secondary-color);
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .category-button.active {
+            background-color: var(--secondary-color);
+            color: var(--white);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Plan Your Event</h1>
+        
+        <div class="stats">
+            <div class="stat-box">
+                <h3>Level</h3>
+                <p id="player-level">1</p>
+            </div>
+            <div class="stat-box">
+                <h3>XP</h3>
+                <p><span id="player-xp">0</span>/<span id="xp-needed">100</span></p>
+                <div class="progress-container">
+                    <div id="xp-progress" class="progress-bar" style="width: 0%">0%</div>
+                </div>
+            </div>
+            <div class="stat-box">
+                <h3>Money</h3>
+                <p>$<span id="player-money">500</span></p>
+            </div>
+        </div>
+        
+        <div class="event-info">
+            <h2 id="event-title">Event Title</h2>
+            <p id="event-description">Event description will appear here.</p>
+            <div class="stats">
+                <div class="stat-box">
+                    <h3>Budget</h3>
+                    <p>$<span id="event-budget">0</span></p>
+                </div>
+                <div class="stat-box">
+                    <h3>Attendees</h3>
+                    <p><span id="event-attendees">0</span></p>
+                </div>
+                <div class="stat-box">
+                    <h3>Duration</h3>
+                    <p><span id="event-duration">0</span> hours</p>
+                </div>
+            </div>
+            <div>
+                <strong>Requirements:</strong>
+                <span id="event-requirements">Requirements will appear here.</span>
+            </div>
+            <div>
+                <strong>Venue:</strong>
+                <span id="venue-name">Venue will appear here.</span>
+                (<span id="venue-sustainability">0</span>% sustainability, $<span id="venue-cost">0</span>)
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab active" data-tab="items">Items & Equipment</button>
+            <button class="tab" data-tab="quality">Quality & Experience</button>
+            <button class="tab" data-tab="summary">Summary</button>
+        </div>
+        
+        <div id="items-tab" class="tab-content active">
+            <h2>Select Items for Your Event</h2>
+            
+            <div class="category-filter" id="category-filter">
+                <!-- Category buttons will be added here -->
+            </div>
+            
+            <div class="item-list" id="item-list">
+                <!-- Item cards will be generated here by JavaScript -->
+            </div>
+        </div>
+        
+        <div id="quality-tab" class="tab-content">
+            <h2>Adjust Quality Investment</h2>
+            
+            <div class="slider-container">
+                <label for="quality-slider">Quality Investment: $<span id="quality-value">0</span></label>
+                <input type="range" id="quality-slider" min="0" max="100" value="0">
+                <p>Higher quality means better attendee ratings but costs more.</p>
+            </div>
+            
+            <div class="slider-container">
+                <label for="marketing-slider">Marketing Investment: $<span id="marketing-value">0</span></label>
+                <input type="range" id="marketing-slider" min="0" max="100" value="0">
+                <p>Marketing improves attendance and engagement but affects your budget.</p>
+            </div>
+            
+            <div class="slider-container">
+                <label for="staff-slider">Staff Investment: $<span id="staff-value">0</span></label>
+                <input type="range" id="staff-slider" min="0" max="100" value="0">
+                <p>More staff improves event organization but costs more.</p>
+            </div>
+        </div>
+        
+        <div id="summary-tab" class="tab-content">
+            <h2>Event Summary</h2>
+            
+            <div class="selected-items">
+                <h3>Selected Items</h3>
+                <ul id="selected-items-list">
+                    <li id="no-items-message">No items selected yet.</li>
+                </ul>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-box">
+                    <h3>Spent</h3>
+                    <p>$<span id="spent-amount">0</span> / $<span id="budget-amount">0</span></p>
+                </div>
+                <div class="stat-box">
+                    <h3>Est. Rating</h3>
+                    <p><span id="estimated-rating">0</span>/100</p>
+                </div>
+                <div class="stat-box">
+                    <h3>Sustainability</h3>
+                    <p><span id="sustainability-score">0</span>%</p>
+                </div>
+            </div>
+            
+            <div class="finish-button">
+                <a href="#" id="finish-planning-button" class="btn">Finish Planning</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="menu-button">
+        <a href="venue.html" class="btn">Back to Venues</a>
+        <a href="index.html" class="btn">Main Menu</a>
+    </div>
+
+    <script>
+        // Game state (in a real implementation, this would be loaded from localStorage)
+        let gameState = {
+            playerLevel: 1,
+            playerXP: 0,
+            playerMoney: 500,
+            xpToNextLevel: 100,
+            selectedEvent: null,
+            selectedVenue: null,
+            selectedItems: [],
+            qualityInvestment: 0,
+            marketingInvestment: 0,
+            staffInvestment: 0,
+            spentAmount: 0
+        };
+        
+        // Try to load game state from localStorage
+        const savedGameState = localStorage.getItem('gameState');
+        if (savedGameState) {
+            const parsedState = JSON.parse(savedGameState);
+            gameState.playerLevel = parsedState.playerLevel || 1;
+            gameState.playerXP = parsedState.playerXP || 0;
+            gameState.playerMoney = parsedState.playerMoney || 500;
+            gameState.xpToNextLevel = parsedState.xpToNextLevel || 100;
+        }
+        
+        // Event templates
+        const eventTemplates = [
+            {
+                id: "booth",
+                title: "Booth in a Hallway",
+                description: "A faculty member has asked you to set up a small booth in the main hallway to distribute information about the upcoming sustainability week. Keep it simple but effective!",
+                budget: 200,
+                attendees: 50,
+                duration: 3,
+                requirements: ["Table", "Informational Material"],
+                level: 1
+            },
+            {
+                id: "club",
+                title: "Small Club Meeting",
+                description: "The ECO Club needs you to organize their monthly meeting in a classroom. They want to discuss upcoming projects and need a comfortable setting.",
+                budget: 300,
+                attendees: 15,
+                duration: 2,
+                requirements: ["Chairs", "Refreshments", "Whiteboard"],
+                level: 1
+            },
+            {
+                id: "workshop",
+                title: "Mini Workshop",
+                description: "A professor asked you to organize a hands-on workshop about recycling crafts. You'll need to provide materials and create an engaging atmosphere.",
+                budget: 400,
+                attendees: 25,
+                duration: 3,
+                requirements: ["Craft Supplies", "Tables", "Chairs"],
+                level: 2
+            },
+            {
+                id: "gamenight",
+                title: "Casual Game Night",
+                description: "The Student Union wants you to host a sustainable-themed game night. You need to find eco-friendly games and create a fun environment.",
+                budget: 450,
+                attendees: 30,
+                duration: 4,
+                requirements: ["Games", "Chairs", "Tables", "Snacks"],
+                level: 2
+            }
+        ];
+        
+        // Venue options
+        const venueOptions = [
+            {
+                id: "main-hall",
+                title: "Main Building Hallway",
+                description: "A busy hallway in the main building with good foot traffic for booths and small displays.",
+                cost: 50,
+                capacity: 60,
+                sustainability: 70,
+                suitableFor: ["booth"],
+                features: ["High Visibility", "Limited Space", "No Privacy"]
+            },
+            {
+                id: "classroom-small",
+                title: "Small Classroom",
+                description: "A standard classroom that can fit up to 25 people comfortably. Good for small meetings and workshops.",
+                cost: 75,
+                capacity: 25,
+                sustainability: 65,
+                suitableFor: ["club", "workshop"],
+                features: ["Whiteboard", "Projector", "Chairs and Tables"]
+            },
+            {
+                id: "classroom-large",
+                title: "Large Classroom",
+                description: "A larger classroom that can accommodate up to 40 people. Suitable for workshops and small events.",
+                cost: 100,
+                capacity: 40,
+                sustainability: 60,
+                suitableFor: ["workshop", "gamenight"],
+                features: ["Whiteboard", "Projector", "Chairs and Tables", "More Space"]
+            },
+            {
+                id: "student-lounge",
+                title: "Student Lounge",
+                description: "A casual space with comfortable seating and a relaxed atmosphere. Perfect for social gatherings.",
+                cost: 80,
+                capacity: 35,
+                sustainability: 75,
+                suitableFor: ["club", "gamenight"],
+                features: ["Comfortable Seating", "Casual Atmosphere", "Some Tables"]
+            },
+            {
+                id: "eco-garden",
+                title: "Campus Eco Garden",
+                description: "An outdoor space with a sustainable garden. Great for environmentally-themed events.",
+                cost: 40,
+                capacity: 50,
+                sustainability: 95,
+                suitableFor: ["booth", "club"],
+                features: ["Outdoor Setting", "Natural Environment", "Weather Dependent"]
+            }
+        ];
+        
+        // Available items to purchase
+        const availableItems = [
+            // Basic Items
+            { name: "Folding Table", cost: 20, rating: 5, sustainability: 60, category: "Furniture" },
+            { name: "Plastic Table", cost: 15, rating: 3, sustainability: 20, category: "Furniture" },
+            { name: "Wooden Table", cost: 35, rating: 7, sustainability: 80, category: "Furniture" },
+            { name: "Basic Chair", cost: 10, rating: 3, sustainability: 40, category: "Furniture" },
+            { name: "Comfortable Chair", cost: 25, rating: 7, sustainability: 60, category: "Furniture" },
+            { name: "Recycled Paper Flyers", cost: 15, rating: 5, sustainability: 85, category: "Informational Material" },
+            { name: "Digital Presentation", cost: 5, rating: 7, sustainability: 95, category: "Informational Material" },
+            { name: "Plastic Brochures", cost: 10, rating: 4, sustainability: 20, category: "Informational Material" },
+            { name: "Regular Whiteboard", cost: 30, rating: 6, sustainability: 50, category: "Equipment" },
+            { name: "Digital Whiteboard", cost: 75, rating: 9, sustainability: 70, category: "Equipment" },
+            { name: "Recycled Craft Supplies", cost: 40, rating: 7, sustainability: 90, category: "Supplies" },
+            { name: "Standard Craft Supplies", cost: 25, rating: 5, sustainability: 40, category: "Supplies" },
+            
+            // Food & Drinks
+            { name: "Local Organic Snacks", cost: 60, rating: 8, sustainability: 90, category: "Food" },
+            { name: "Basic Snacks", cost: 30, rating: 5, sustainability: 30, category: "Food" },
+            { name: "Bottled Water", cost: 20, rating: 4, sustainability: 10, category: "Drinks" },
+            { name: "Water Dispenser", cost: 35, rating: 6, sustainability: 85, category: "Drinks" },
+            { name: "Sustainable Refreshments", cost: 50, rating: 7, sustainability: 85, category: "Food" },
+            { name: "Standard Refreshments", cost: 30, rating: 5, sustainability: 40, category: "Food" },
+            
+            // Equipment
+            { name: "Basic Sound System", cost: 80, rating: 6, sustainability: 50, category: "Audio" },
+            { name: "Professional Sound System", cost: 200, rating: 9, sustainability: 60, category: "Audio" },
+            { name: "Basic Lighting", cost: 50, rating: 5, sustainability: 40, category: "Lighting" },
+            { name: "LED Stage Lights", cost: 120, rating: 8, sustainability: 80, category: "Lighting" },
+            { name: "Wired Microphone", cost: 30, rating: 5, sustainability: 60, category: "Audio" },
+            { name: "Wireless Microphone", cost: 70, rating: 8, sustainability: 50, category: "Audio" },
+            { name: "Speaker Podium", cost: 45, rating: 6, sustainability: 70, category: "Furniture" },
+            { name: "Standard Projector", cost: 100, rating: 7, sustainability: 50, category: "Visual" },
+            { name: "Energy-Efficient Projector", cost: 150, rating: 8, sustainability: 80, category: "Visual" },
+            
+            // Games & Activities
+            { name: "Standard Board Games", cost: 50, rating: 7, sustainability: 60, category: "Entertainment" },
+            { name: "Eco-themed Games", cost: 70, rating: 8, sustainability: 90, category: "Entertainment" },
+            { name: "Recycled Material Games", cost: 60, rating: 6, sustainability: 95, category: "Entertainment" },
+            
+            // Display & Signs
+            { name: "Paper Signage", cost: 20, rating: 4, sustainability: 40, category: "Signage" },
+            { name: "Reusable Signage", cost: 50, rating: 6, sustainability: 90, category: "Signage" },
+            { name: "Digital Signage", cost: 80, rating: 9, sustainability: 75, category: "Signage" },
+            { name: "Display Easels", cost: 30, rating: 5, sustainability: 60, category: "Display" },
+            
+            // Specialized Equipment
+            { name: "Scorekeeping System", cost: 60, rating: 7, sustainability: 70, category: "Equipment" },
+            { name: "Recycled Trophies", cost: 90, rating: 8, sustainability: 85, category: "Prizes" },
+            { name: "Standard Trophies", cost: 70, rating: 7, sustainability: 40, category: "Prizes" },
+            { name: "Temporary Booth", cost: 70, rating: 6, sustainability: 50, category: "Structure" },
+            { name: "Sustainable Booth", cost: 120, rating: 8, sustainability: 90, category: "Structure" },
+            { name: "Cash Box", cost: 40, rating: 5, sustainability: 70, category: "Financial" },
+            { name: "Digital Payment System", cost: 90, rating: 9, sustainability: 85, category: "Financial" },
+            { name: "Recycling Bins", cost: 35, rating: 5, sustainability: 95, category: "Waste Management" },
+            { name: "General Waste Bins", cost: 20, rating: 3, sustainability: 30, category: "Waste Management" },
+            { name: "Compost Bins", cost: 40, rating: 6, sustainability: 98, category: "Waste Management" }
+        ];
+        
+        // DOM elements
+        const playerLevelElement = document.getElementById('player-level');
+        const playerXPElement = document.getElementById('player-xp');
+        const xpNeededElement = document.getElementById('xp-needed');
+        const playerMoneyElement = document.getElementById('player-money');
+        const xpProgressElement = document.getElementById('xp-progress');
+        const eventTitleElement = document.getElementById('event-title');
+        const eventDescriptionElement = document.getElementById('event-description');
+        const eventBudgetElement = document.getElementById('event-budget');
+        const eventAttendeesElement = document.getElementById('event-attendees');
+        const eventDurationElement = document.getElementById('event-duration');
+        const eventRequirementsElement = document.getElementById('event-requirements');
+        const venueName = document.getElementById('venue-name');
+        const venueSustainability = document.getElementById('venue-sustainability');
+        const venueCost = document.getElementById('venue-cost');
+        const itemListElement = document.getElementById('item-list');
+        const qualitySlider = document.getElementById('quality-slider');
+        const qualityValueElement = document.getElementById('quality-value');
+        const marketingSlider = document.getElementById('marketing-slider');
+        const marketingValueElement = document.getElementById('marketing-value');
+        const staffSlider = document.getElementById('staff-slider');
+        const staffValueElement = document.getElementById('staff-value');
+        const selectedItemsList = document.getElementById('selected-items-list');
+        const noItemsMessage = document.getElementById('no-items-message');
+        const spentAmountElement = document.getElementById('spent-amount');
+        const budgetAmountElement = document.getElementById('budget-amount');
+        const estimatedRatingElement = document.getElementById('estimated-rating');
+        const sustainabilityScoreElement = document.getElementById('sustainability-score');
+        const finishPlanningButton = document.getElementById('finish-planning-button');
+        const categoryFilterElement = document.getElementById('category-filter');
+
+        // Initialize the page
+        function init() {
+            console.log("Planning page initializing...");
+            // Get the selected event and venue from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const eventId = urlParams.get('event');
+            const venueId = urlParams.get('venue');
+            
+            console.log("Event ID:", eventId, "Venue ID:", venueId);
+            
+            // Find the selected event and venue
+            gameState.selectedEvent = eventTemplates.find(event => event.id === eventId);
+            gameState.selectedVenue = venueOptions.find(venue => venue.id === venueId);
+            
+            if (!gameState.selectedEvent || !gameState.selectedVenue) {
+                // If no event or venue is selected, redirect to events page
+                console.log("No event or venue found, redirecting...");
+                window.location.href = 'events.html';
+                return;
+            }
+            
+            // Add venue cost to spent amount
+            gameState.spentAmount = gameState.selectedVenue.cost;
+            
+            // Update player stats display
+            updatePlayerStats();
+            
+            // Display event and venue information
+            displayEventInfo();
+            
+            // Set up tabs
+            setupTabs();
+            
+            // Generate item categories
+            generateCategories();
+            
+            // Generate item list
+            generateItemList();
+            
+            // Add event listeners for sliders
+            setupSliders();
+            
+            // Add event listener for finish button
+            finishPlanningButton.addEventListener('click', finishPlanning);
+            
+            // Update UI with initial values
+            updateSummary();
+            
+            console.log("Planning page initialized successfully");
+        }
+        
+        // Update player stats display
+        function updatePlayerStats() {
+            playerLevelElement.textContent = gameState.playerLevel;
+            playerXPElement.textContent = gameState.playerXP;
+            xpNeededElement.textContent = gameState.xpToNextLevel;
+            playerMoneyElement.textContent = gameState.playerMoney;
+            
+            const xpProgress = (gameState.playerXP / gameState.xpToNextLevel) * 100;
+            xpProgressElement.style.width = `${xpProgress}%`;
+            xpProgressElement.textContent = `${Math.round(xpProgress)}%`;
+        }
+        
+        // Display event and venue information
+        function displayEventInfo() {
+            eventTitleElement.textContent = gameState.selectedEvent.title;
+            eventDescriptionElement.textContent = gameState.selectedEvent.description;
+            eventBudgetElement.textContent = gameState.selectedEvent.budget;
+            budgetAmountElement.textContent = gameState.selectedEvent.budget;
+            eventAttendeesElement.textContent = gameState.selectedEvent.attendees;
+            eventDurationElement.textContent = gameState.selectedEvent.duration;
+            eventRequirementsElement.textContent = gameState.selectedEvent.requirements.join(', ');
+            
+            venueName.textContent = gameState.selectedVenue.title;
+            venueSustainability.textContent = gameState.selectedVenue.sustainability;
+            venueCost.textContent = gameState.selectedVenue.cost;
+        }
+        
+        // Set up tabs
+        function setupTabs() {
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    tab.classList.add('active');
+                    
+                    // Hide all tab contents
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Show the corresponding tab content
+                    const tabId = tab.getAttribute('data-tab');
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                });
+            });
+        }
+        
+        // Generate item categories for filtering
+        function generateCategories() {
+            // Get unique categories
+            const categories = [...new Set(availableItems.map(item => item.category))];
+            
+            // Add "All" category
+            const allButton = document.createElement('button');
+            allButton.className = 'category-button active';
+            allButton.textContent = 'All';
+            allButton.addEventListener('click', () => filterItems('All'));
+            categoryFilterElement.appendChild(allButton);
+            
+            // Add category buttons
+            categories.forEach(category => {
+                const button = document.createElement('button');
+                button.className = 'category-button';
+                button.textContent = category;
+                button.addEventListener('click', () => filterItems(category));
+                categoryFilterElement.appendChild(button);
+            });
+        }
+        
+        // Filter items by category
+        function filterItems(category) {
+            // Update active button
+            const buttons = document.querySelectorAll('.category-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+                if (button.textContent === category) {
+                    button.classList.add('active');
+                }
+            });
+            
+            // Filter and regenerate items
+            generateItemList(category);
+        }
+        
+        // Generate item list
+        function generateItemList(filterCategory = 'All') {
+            itemListElement.innerHTML = '';
+            
+            // Filter items that might be needed for requirements
+            const requirements = gameState.selectedEvent.requirements;
+            let filteredItems = availableItems;
+            
+            // Apply category filter if not "All"
+            if (filterCategory !== 'All') {
+                filteredItems = filteredItems.filter(item => item.category === filterCategory);
+            }
+            
+            // Highlight items that match requirements
+            const highlightedItems = filteredItems.filter(item => {
+                return requirements.some(req => 
+                    item.name.includes(req) || 
+                    req.includes(item.name) || 
+                    item.category.includes(req) || 
+                    req.includes(item.category)
+                );
+            });
+            
+            // Sort items: highlighted first, then by category
+            const sortedItems = [
+                ...highlightedItems,
+                ...filteredItems.filter(item => !highlightedItems.includes(item))
+            ];
+            
+            // Create a card for each item
+            sortedItems.forEach(item => {
+                const itemCard = document.createElement('div');
+                itemCard.className = 'item-card';
+                
+                // Highlight items that match requirements
+                if (highlightedItems.includes(item)) {
+                    itemCard.style.borderLeft = '4px solid var(--primary-color)';
+                }
+                
+                const itemName = document.createElement('h3');
+                itemName.textContent = item.name;
+                
+                const itemCost = document.createElement('p');
+                itemCost.textContent = `Cost: $${item.cost}`;
+                
+                const itemRating = document.createElement('p');
+                itemRating.textContent = `Rating: ${item.rating}/10`;
+                
+                const itemSustainability = document.createElement('p');
+                itemSustainability.textContent = `Sustainability: ${item.sustainability}%`;
+                
+                const buyButton = document.createElement('button');
+                
+                // Check if item is already selected
+                const isSelected = gameState.selectedItems.some(selectedItem => selectedItem.name === item.name);
+                
+                if (isSelected) {
+                    buyButton.textContent = 'Remove';
+                    buyButton.addEventListener('click', () => removeItem(item));
+                    buyButton.style.backgroundColor = '#f44336';
+                } else {
+                    buyButton.textContent = 'Add to Event';
+                    buyButton.addEventListener('click', () => addItem(item));
+                }
+                
+                itemCard.appendChild(itemName);
+                itemCard.appendChild(itemCost);
+                itemCard.appendChild(itemRating);
+                itemCard.appendChild(itemSustainability);
+                itemCard.appendChild(buyButton);
+                
+                itemListElement.appendChild(itemCard);
+            });
+        }
+        
+        // Set up sliders
+        function setupSliders() {
+            qualitySlider.addEventListener('input', () => {
+                const quality = parseInt(qualitySlider.value);
+                gameState.qualityInvestment = quality;
+                qualityValueElement.textContent = quality;
+                updateSummary();
+            });
+            
+            marketingSlider.addEventListener('input', () => {
+                const marketing = parseInt(marketingSlider.value);
+                gameState.marketingInvestment = marketing;
+                marketingValueElement.textContent = marketing;
+                updateSummary();
+            });
+            
+            staffSlider.addEventListener('input', () => {
+                const staff = parseInt(staffSlider.value);
+                gameState.staffInvestment = staff;
+                staffValueElement.textContent = staff;
+                updateSummary();
+            });
+        }
+        
+        // Add an item to the event
+        function addItem(item) {
+            // Check if player can afford it
+            if (calculateTotalCost() + item.cost > gameState.selectedEvent.budget * 2) {
+                alert("You can't exceed twice the budget!");
+                return;
+            }
+            
+            // Add item to selected items
+            gameState.selectedItems.push(item);
+            
+            // Update UI
+            updateSelectedItemsDisplay();
+            updateSummary();
+            
+            // Refresh item list to update buttons
+            const activeCategory = document.querySelector('.category-button.active').textContent;
+            generateItemList(activeCategory);
+        }
+        
+        // Remove an item from the event
+        function removeItem(item) {
+            // Find the index of the item
+            const index = gameState.selectedItems.findIndex(selectedItem => selectedItem.name === item.name);
+            
+            // Remove item if found
+            if (index !== -1) {
+                gameState.selectedItems.splice(index, 1);
+                
+                // Update UI
+                updateSelectedItemsDisplay();
+                updateSummary();
+                
+                // Refresh item list to update buttons
+                const activeCategory = document.querySelector('.category-button.active').textContent;
+                generateItemList(activeCategory);
+            }
+        }
+        
+        // Update the display of selected items
+        function updateSelectedItemsDisplay() {
+            if (gameState.selectedItems.length === 0) {
+                noItemsMessage.style.display = 'list-item';
+                selectedItemsList.innerHTML = '';
+                selectedItemsList.appendChild(noItemsMessage);
+                return;
+            }
+            
+            noItemsMessage.style.display = 'none';
+            selectedItemsList.innerHTML = '';
+            
+            gameState.selectedItems.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = `${item.name} - ${item.cost} (Rating: ${item.rating}/10, Sustainability: ${item.sustainability}%)`;
+                selectedItemsList.appendChild(li);
+            });
+        }
+        
+        // Calculate total cost
+        function calculateTotalCost() {
+            const itemsCost = gameState.selectedItems.reduce((sum, item) => sum + item.cost, 0);
+            const venueCost = gameState.selectedVenue.cost;
+            const qualityCost = gameState.qualityInvestment;
+            const marketingCost = gameState.marketingInvestment;
+            const staffCost = gameState.staffInvestment;
+            
+            return itemsCost + venueCost + qualityCost + marketingCost + staffCost;
+        }
+        
+        // Update the summary tab
+        function updateSummary() {
+            // Calculate costs
+            const totalCost = calculateTotalCost();
+            gameState.spentAmount = totalCost;
+            
+            // Update spent amount
+            spentAmountElement.textContent = totalCost;
+            
+            // Calculate estimated rating
+            let rating = calculateEstimatedRating();
+            estimatedRatingElement.textContent = rating;
+            
+            // Calculate sustainability score
+            let sustainability = calculateSustainabilityScore();
+            sustainabilityScoreElement.textContent = sustainability;
+            
+            // Update finish button state
+            updateFinishButtonState();
+        }
+        
+        // Calculate estimated rating
+        function calculateEstimatedRating() {
+            // Base rating from quality investment
+            let rating = gameState.qualityInvestment * 0.4;
+            
+            // Add rating from items
+            if (gameState.selectedItems.length > 0) {
+                const itemRatingAvg = gameState.selectedItems.reduce((sum, item) => sum + item.rating, 0) / gameState.selectedItems.length;
+                rating += itemRatingAvg * 7;
+            }
+            
+            // Add rating from marketing
+            rating += gameState.marketingInvestment * 0.2;
+            
+            // Add rating from staff
+            rating += gameState.staffInvestment * 0.15;
+            
+            // Adjust for requirements
+            const requirements = gameState.selectedEvent.requirements;
+            const requirementsMet = checkRequirementsMet(requirements);
+            
+            if (!requirementsMet) {
+                rating *= 0.7; // Penalty for not meeting requirements
+            }
+            
+            // Cap at 100
+            return Math.min(Math.round(rating), 100);
+        }
+        
+        // Calculate sustainability score
+        function calculateSustainabilityScore() {
+            // Base sustainability from venue
+            let score = gameState.selectedVenue.sustainability;
+            
+            // Add sustainability from items
+            if (gameState.selectedItems.length > 0) {
+                const itemSustainabilityAvg = gameState.selectedItems.reduce((sum, item) => sum + item.sustainability, 0) / gameState.selectedItems.length;
+                score = (score + itemSustainabilityAvg) / 2; // Average with venue sustainability
+            }
+            
+            // Slight penalty for excessive quality investment
+            if (gameState.qualityInvestment > 50) {
+                score -= (gameState.qualityInvestment - 50) * 0.1;
+            }
+            
+            // Slight penalty for marketing
+            score -= gameState.marketingInvestment * 0.05;
+            
+            // Ensure score is between 0 and 100
+            return Math.min(Math.max(Math.round(score), 0), 100);
+        }
+        
+        // Check if a specific requirement is met
+        function isRequirementMet(requirement) {
+            return gameState.selectedItems.some(item => 
+                item.name.includes(requirement) || 
+                requirement.includes(item.name) || 
+                item.category.includes(requirement) || 
+                requirement.includes(item.category)
+            );
+        }
+        
+        // Check if all requirements are met
+        function checkRequirementsMet(requirements) {
+            return requirements.every(req => isRequirementMet(req));
+        }
+        
+        // Update finish button state
+        function updateFinishButtonState() {
+            const requirements = gameState.selectedEvent.requirements;
+            const requirementsMet = checkRequirementsMet(requirements);
+            
+            if (!requirementsMet) {
+                finishPlanningButton.classList.add('disabled');
+                finishPlanningButton.title = 'You must fulfill all event requirements before finishing';
+            } else {
+                finishPlanningButton.classList.remove('disabled');
+                finishPlanningButton.title = '';
+            }
+        }
+        
+        // Finish planning the event and go to results
+        function finishPlanning(e) {
+            // Check if requirements are met
+            const requirements = gameState.selectedEvent.requirements;
+            const requirementsMet = checkRequirementsMet(requirements);
+            
+            if (!requirementsMet) {
+                e.preventDefault();
+                alert('You must fulfill all event requirements before finishing!');
+                return;
+            }
+            
+            // Store event data in localStorage for results page
+            const eventData = {
+                event: gameState.selectedEvent,
+                venue: gameState.selectedVenue,
+                items: gameState.selectedItems,
+                quality: gameState.qualityInvestment,
+                marketing: gameState.marketingInvestment,
+                staff: gameState.staffInvestment,
+                totalCost: gameState.spentAmount,
+                estimatedRating: parseInt(estimatedRatingElement.textContent),
+                sustainability: parseInt(sustainabilityScoreElement.textContent)
+            };
+            
+            localStorage.setItem('eventResults', JSON.stringify(eventData));
+            
+            // Redirect to results page
+            window.location.href = 'results.html';
+        }
+        
+        // Initialize when the page loads
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

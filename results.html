@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Results - Sustainable Event Organizer</title>
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --secondary-color: #81c784;
+            --light-color: #e8f5e9;
+            --dark-color: #1b5e20;
+            --accent-color: #ffeb3b;
+            --text-color: #212121;
+            --white: #ffffff;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light-color);
+            color: var(--text-color);
+            touch-action: manipulation;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1, h2, h3 {
+            color: var(--primary-color);
+        }
+        
+        .container {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 15px 5px;
+            transition: background-color 0.3s;
+            display: inline-block;
+            text-decoration: none;
+        }
+        
+        .btn:hover {
+            background-color: var(--dark-color);
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-box {
+            background-color: var(--light-color);
+            padding: 10px;
+            border-radius: 4px;
+            min-width: 100px;
+            text-align: center;
+            margin-bottom: 10px;
+            flex: 1 1 200px;
+            margin: 5px;
+        }
+        
+        .result-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .result-title {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        
+        .progress-bar {
+            height: 20px;
+            border-radius: 5px;
+            background-color: var(--secondary-color);
+            text-align: center;
+            line-height: 20px;
+            color: var(--white);
+            transition: width 0.5s;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+        
+        .badge-bronze {
+            background-color: #cd7f32;
+            color: white;
+        }
+        
+        .badge-silver {
+            background-color: #c0c0c0;
+            color: black;
+        }
+        
+        .badge-gold {
+            background-color: #ffd700;
+            color: black;
+        }
+        
+        .badge-platinum {
+            background-color: #e5e4e2;
+            color: black;
+        }
+        
+        .feedback {
+            background-color: var(--light-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .requirements {
+            margin: 20px 0;
+        }
+        
+        .requirement-item {
+            padding: 5px 0;
+        }
+        
+        .met {
+            color: green;
+        }
+        
+        .not-met {
+            color: red;
+        }
+        
+        .event-summary {
+            margin-top: 20px;
+        }
+        
+        .summary-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .summary-list li {
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .xp-gain {
+            text-align: center;
+            margin: 30px 0;
+            font-size: 18px;
+        }
+        
+        .btn-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .level-up-msg {
+            background-color: var(--accent-color);
+            color: var(--text-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="result-header">
+            <h1>Event Results</h1>
+            <h2 class="result-title" id="event-title">Event Title</h2>
+            <div id="result-status"></div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-box">
+                <h3>Rating</h3>
+                <p><span id="final-rating">0</span>/100</p>
+            </div>
+            <div class="stat-box">
+                <h3>Sustainability</h3>
+                <p><span id="final-sustainability">0</span>% 
+                    <span id="sustainability-badge" class="badge"></span>
+                </p>
+            </div>
+            <div class="stat-box">
+                <h3>Budget</h3>
+                <p>$<span id="final-spent">0</span> / $<span id="final-budget">0</span></p>
+            </div>
+        </div>
+        
+        <div class="feedback" id="feedback-container">
+            <h3>Feedback</h3>
+            <p id="feedback-message"></p>
+        </div>
+        
+        <div class="requirements">
+            <h3>Requirements Check</h3>
+            <ul id="requirements-checklist"></ul>
+        </div>
+        
+        <div class="event-summary">
+            <h3>Event Summary</h3>
+            <ul class="summary-list">
+                <li><strong>Venue:</strong> <span id="venue-name"></span> ($<span id="venue-cost"></span>, <span id="venue-sustainability"></span>% sustainability)</li>
+                <li><strong>Quality Investment:</strong> $<span id="quality-investment"></span></li>
+                <li><strong>Marketing Investment:</strong> $<span id="marketing-investment"></span></li>
+                <li><strong>Staff Investment:</strong> $<span id="staff-investment"></span></li>
+                <li><strong>Items:</strong></li>
+            </ul>
+            <ul id="items-list" class="summary-list"></ul>
+        </div>
+        
+        <div class="xp-gain">
+            <h3>Experience Gained</h3>
+            <p>XP Earned: <span id="xp-earned">0</span></p>
+            <div class="progress-container">
+                <div id="xp-progress" class="progress-bar" style="width: 0%">0%</div>
+            </div>
+        </div>
+        
+        <div class="level-up-msg" id="level-up-message">
+            Congratulations! You've reached Level <span id="new-level">2</span>!
+        </div>
+        
+        <div class="btn-container">
+            <a href="events.html" class="btn">Next Event</a>
+            <a href="index.html" class="btn">Main Menu</a>
+        </div>
+    </div>
+
+    <script>
+        // Game state (would normally be stored in localStorage)
+        let gameState = {
+            playerLevel: 1,
+            playerXP: 0,
+            playerMoney: 500,
+            xpToNextLevel: 100
+        };
+        
+        // DOM elements
+        const eventTitleElement = document.getElementById('event-title');
+        const resultStatusElement = document.getElementById('result-status');
+        const finalRatingElement = document.getElementById('final-rating');
+        const finalSustainabilityElement = document.getElementById('final-sustainability');
+        const sustainabilityBadgeElement = document.getElementById('sustainability-badge');
+        const finalSpentElement = document.getElementById('final-spent');
+        const finalBudgetElement = document.getElementById('final-budget');
+        const feedbackMessageElement = document.getElementById('feedback-message');
+        const requirementsChecklistElement = document.getElementById('requirements-checklist');
+        const venueNameElement = document.getElementById('venue-name');
+        const venueCostElement = document.getElementById('venue-cost');
+        const venueSustainabilityElement = document.getElementById('venue-sustainability');
+        const qualityInvestmentElement = document.getElementById('quality-investment');
+        const marketingInvestmentElement = document.getElementById('marketing-investment');
+        const staffInvestmentElement = document.getElementById('staff-investment');
+        const itemsListElement = document.getElementById('items-list');
+        const xpEarnedElement = document.getElementById('xp-earned');
+        const xpProgressElement = document.getElementById('xp-progress');
+        const levelUpMessageElement = document.getElementById('level-up-message');
+        const newLevelElement = document.getElementById('new-level');
+        
+        // Initialize the page
+        function init() {
+            // Load event results from localStorage
+            const eventResultsJSON = localStorage.getItem('eventResults');
+            
+            if (!eventResultsJSON) {
+                // If no results found, redirect to events page
+                window.location.href = 'events.html';
+                return;
+            }
+            
+            const eventResults = JSON.parse(eventResultsJSON);
+            
+            // Load game state from localStorage if available
+            const gameStateJSON = localStorage.getItem('gameState');
+            if (gameStateJSON) {
+                gameState = JSON.parse(gameStateJSON);
+            }
+            
+            // Display results
+            displayResults(eventResults);
+            
+            // Add some randomness to the final rating and sustainability
+            applyRandomVariation(eventResults);
+            
+            // Process the event outcome
+            processEventOutcome(eventResults);
+        }
+        
+        // Display event results
+        function displayResults(results) {
+            // Set event title
+            eventTitleElement.textContent = results.event.title;
+            
+            // Set budget information
+            finalBudgetElement.textContent = results.event.budget;
+            finalSpentElement.textContent = results.totalCost;
+            
+            // Set investments
+            qualityInvestmentElement.textContent = results.quality;
+            marketingInvestmentElement.textContent = results.marketing;
+            staffInvestmentElement.textContent = results.staff;
+            
+            // Set venue information
+            venueNameElement.textContent = results.venue.title;
+            venueCostElement.textContent = results.venue.cost;
+            venueSustainabilityElement.textContent = results.venue.sustainability;
+            
+            // Display items
+            displayItems(results.items);
+            
+            // Display requirements checklist
+            displayRequirements(results.event.requirements, results.items);
+        }
+        
+        // Apply random variation to make results feel dynamic
+        function applyRandomVariation(results) {
+            // Add slight randomness to rating (-5 to +5)
+            const ratingVariance = Math.floor(Math.random() * 11) - 5;
+            const finalRating = Math.max(0, Math.min(100, results.estimatedRating + ratingVariance));
+            
+            // Add slight randomness to sustainability (-3 to +3)
+            const sustainabilityVariance = Math.floor(Math.random() * 7) - 3;
+            const finalSustainability = Math.max(0, Math.min(100, results.sustainability + sustainabilityVariance));
+            
+            // Display final values
+            finalRatingElement.textContent = finalRating;
+            finalSustainabilityElement.textContent = finalSustainability;
+            
+            // Set sustainability badge
+            let badge = "";
+            let badgeClass = "";
+            
+            if (finalSustainability >= 95) {
+                badge = "Platinum";
+                badgeClass = "badge-platinum";
+            } else if (finalSustainability >= 90) {
+                badge = "Gold";
+                badgeClass = "badge-gold";
+            } else if (finalSustainability >= 75) {
+                badge = "Silver";
+                badgeClass = "badge-silver";
+            } else if (finalSustainability >= 50) {
+                badge = "Bronze";
+                badgeClass = "badge-bronze";
+            }
+            
+            sustainabilityBadgeElement.textContent = badge;
+            sustainabilityBadgeElement.className = `badge ${badgeClass}`;
+            
+            // Update results object with final values
+            results.finalRating = finalRating;
+            results.finalSustainability = finalSustainability;
+        }
+        
+        // Display items in the summary
+        function displayItems(items) {
+            itemsListElement.innerHTML = '';
+            
+            if (items.length === 0) {
+                const li = document.createElement('li');
+                li.textContent = 'No items selected';
+                itemsListElement.appendChild(li);
+                return;
+            }
+            
+            items.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = `${item.name} - $${item.cost} (Rating: ${item.rating}/10, Sustainability: ${item.sustainability}%)`;
+                itemsListElement.appendChild(li);
+            });
+        }
+        
+        // Display requirements checklist
+        function displayRequirements(requirements, items) {
+            requirementsChecklistElement.innerHTML = '';
+            
+            requirements.forEach(req => {
+                const li = document.createElement('li');
+                li.className = 'requirement-item';
+                
+                const isMet = isRequirementMet(req, items);
+                
+                if (isMet) {
+                    li.className += ' met';
+                    li.textContent = `${req}: ✓`;
+                } else {
+                    li.className += ' not-met';
+                    li.textContent = `${req}: ✗`;
+                }
+                
+                requirementsChecklistElement.appendChild(li);
+            });
+        }
+        
+        // Check if a requirement is met
+        function isRequirementMet(requirement, items) {
+            return items.some(item => 
+                item.name.includes(requirement) || 
+                requirement.includes(item.name) || 
+                item.category.includes(requirement) || 
+                requirement.includes(item.category)
+            );
+        }
+        
+        // Check if all requirements are met
+        function checkRequirementsMet(requirements, items) {
+            return requirements.every(req => isRequirementMet(req, items));
+        }
+        
+        // Process event outcome
+        function processEventOutcome(results) {
+            // Check if the event was successful
+            const isSuccessful = results.finalSustainability >= 50 && 
+                                checkRequirementsMet(results.event.requirements, results.items);
+            
+            // Set result status
+            if (isSuccessful) {
+                resultStatusElement.innerHTML = '<h3 style="color: green;">Event Successful!</h3>';
+            } else {
+                resultStatusElement.innerHTML = '<h3 style="color: red;">Event Failed!</h3>';
+            }
+            
+            // Calculate XP earned
+            let xpEarned = calculateXP(results, isSuccessful);
+            
+            // Set feedback message
+            setFeedbackMessage(results, isSuccessful);
+            
+            // Update player stats
+            updatePlayerStats(xpEarned, results);
+            
+            // Check for level up
+            checkLevelUp();
+            
+            // Update XP display
+            xpEarnedElement.textContent = xpEarned;
+            const xpProgress = (gameState.playerXP / gameState.xpToNextLevel) * 100;
+            xpProgressElement.style.width = `${xpProgress}%`;
+            xpProgressElement.textContent = `${Math.round(xpProgress)}%`;
+            
+            // Save updated game state
+            localStorage.setItem('gameState', JSON.stringify(gameState));
+        }
+        
+        // Calculate XP earned
+        function calculateXP(results, isSuccessful) {
+            if (!isSuccessful) {
+                return 5; // Consolation XP
+            }
+            
+            // Base XP for successful event
+            let xpEarned = 20 * gameState.playerLevel;
+            
+            // Bonus XP for better sustainability
+            if (results.finalSustainability >= 95) xpEarned += 40;
+            else if (results.finalSustainability >= 90) xpEarned += 30;
+            else if (results.finalSustainability >= 75) xpEarned += 20;
+            else if (results.finalSustainability >= 50) xpEarned += 10;
+            
+            // Bonus XP for good rating
+            xpEarned += Math.floor(results.finalRating / 10);
+            
+            // Bonus XP for staying within budget
+            if (results.totalCost <= results.event.budget) {
+                xpEarned += 15;
+            } else {
+                // Penalty for going over budget
+                const overBudgetRatio = results.totalCost / results.event.budget;
+                if (overBudgetRatio <= 1.2) {
+                    xpEarned -= 5;
+                } else if (overBudgetRatio <= 1.5) {
+                    xpEarned -= 10;
+                } else {
+                    xpEarned -= 20;
+                }
+            }
+            
+            // Ensure minimum XP
+            return Math.max(5, xpEarned);
+        }
+        
+        // Set feedback message
+        function setFeedbackMessage(results, isSuccessful) {
+            if (isSuccessful) {
+                // Determine the strongest and weakest aspects
+                const aspects = [
+                    { name: "venue choice", value: results.venue.sustainability },
+                    { name: "item selection", value: getItemsAverageSustainability(results.items) },
+                    { name: "quality investment", value: results.quality > 50 ? 80 : 50 },
+                    { name: "budget management", value: results.totalCost <= results.event.budget ? 90 : 40 }
+                ];
+                
+                aspects.sort((a, b) => b.value - a.value);
+                
+                const strongestAspect = aspects[0].name;
+                const weakestAspect = aspects[aspects.length - 1].name;
+                
+                let message = `Great job! The event was successful with a ${results.finalRating}/100 rating and ${results.finalSustainability}% sustainability score.`;
+                
+                // Add feedback about strongest and weakest aspects
+                message += ` Your ${strongestAspect} was particularly strong, but you could improve your ${weakestAspect}.`;
+                
+                // Add feedback about rating if low
+                if (results.finalRating < 60) {
+                    message += " The attendees thought the event was a bit basic. Consider investing more in quality next time.";
+                }
+                
+                // Add feedback about over-budget
+                if (results.totalCost > results.event.budget) {
+                    message += ` You went over budget by $${results.totalCost - results.event.budget}, which reduced your XP gain.`;
+                }
+                
+                feedbackMessageElement.textContent = message;
+            } else {
+                // Failed event
+                if (results.finalSustainability < 50) {
+                    feedbackMessageElement.textContent = `The event did not meet minimum sustainability requirements. You achieved only ${results.finalSustainability}%. Aim for at least Bronze (50%) sustainability by choosing more sustainable items and venues.`;
+                } else {
+                    feedbackMessageElement.textContent = "You didn't include all required items for the event. Check the requirements list and make sure you include items that match each requirement.";
+                }
+            }
+        }
+        
+        // Get average sustainability of items
+        function getItemsAverageSustainability(items) {
+            if (items.length === 0) return 0;
+            return items.reduce((sum, item) => sum + item.sustainability, 0) / items.length;
+        }
+        
+        // Update player stats
+        function updatePlayerStats(xpEarned, results) {
+            // Add XP
+            gameState.playerXP += xpEarned;
+            
+            // Add money if successful
+            if (results.finalSustainability >= 50 && 
+                checkRequirementsMet(results.event.requirements, results.items)) {
+                
+                // Calculate profit
+                const profit = results.event.budget - results.totalCost;
+                const moneyEarned = profit > 0 ? profit : 0;
+                
+                // Add event budget and profit to player money
+                gameState.playerMoney += moneyEarned;
+            }
+        }
+        
+        // Check if player levels up
+        function checkLevelUp() {
+            if (gameState.playerXP >= gameState.xpToNextLevel) {
+                gameState.playerLevel++;
+                gameState.playerXP -= gameState.xpToNextLevel;
+                gameState.xpToNextLevel = Math.floor(gameState.xpToNextLevel * 1.5);
+                
+                // Bonus money for leveling up
+                const levelUpBonus = 200 * gameState.playerLevel;
+                gameState.playerMoney += levelUpBonus;
+                
+                // Show level up message
+                levelUpMessageElement.style.display = 'block';
+                newLevelElement.textContent = gameState.playerLevel;
+            }
+        }
+        
+        // Initialize when the page loads
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

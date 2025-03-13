@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Play - Sustainable Event Organizer</title>
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --secondary-color: #81c784;
+            --light-color: #e8f5e9;
+            --dark-color: #1b5e20;
+            --accent-color: #ffeb3b;
+            --text-color: #212121;
+            --white: #ffffff;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light-color);
+            color: var(--text-color);
+            touch-action: manipulation;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1, h2, h3 {
+            color: var(--primary-color);
+        }
+        
+        .container {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 15px 0;
+            transition: background-color 0.3s;
+            display: inline-block;
+            text-decoration: none;
+        }
+        
+        .btn:hover {
+            background-color: var(--dark-color);
+        }
+        
+        .tutorial-section {
+            margin-bottom: 25px;
+        }
+        
+        .rating-box {
+            background-color: var(--light-color);
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+        
+        .badge-bronze {
+            background-color: #cd7f32;
+            color: white;
+        }
+        
+        .badge-silver {
+            background-color: #c0c0c0;
+            color: black;
+        }
+        
+        .badge-gold {
+            background-color: #ffd700;
+            color: black;
+        }
+        
+        .badge-platinum {
+            background-color: #e5e4e2;
+            color: black;
+        }
+        
+        .btn-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>How to Play</h1>
+        
+        <div class="tutorial-section">
+            <h2>Game Objective</h2>
+            <p>You are an event organizer who must plan successful, sustainable events while managing your budget. Your goal is to level up by gaining experience points (XP) from successfully organizing events.</p>
+        </div>
+        
+        <div class="tutorial-section">
+            <h2>Key Concepts</h2>
+            <h3>Sustainability Rating</h3>
+            <p>Each event needs at least a Bronze rating (50%) to succeed. Your sustainability rating is based on the items you choose for your event.</p>
+            
+            <div class="rating-box">
+                <h4>Rating Levels:</h4>
+                <p><span class="badge badge-platinum">Platinum</span> 95% or above</p>
+                <p><span class="badge badge-gold">Gold</span> 90% or above</p>
+                <p><span class="badge badge-silver">Silver</span> 75% or above</p>
+                <p><span class="badge badge-bronze">Bronze</span> 50% or above</p>
+                <p>Below 50%: <strong>Fail</strong></p>
+            </div>
+            
+            <h3>Requirements</h3>
+            <p>Each event has specific items you must include. For example, a workshop might require tables, chairs, and craft supplies. You must include items that satisfy all requirements to succeed.</p>
+            
+            <h3>Budget</h3>
+            <p>Trying to stay within budget will maximize your XP earnings. Going over budget will reduce your XP, but sometimes it's necessary to achieve high sustainability ratings.</p>
+            
+            <h3>Quality Investment</h3>
+            <p>You can invest extra money to improve the quality of your event, which increases attendee ratings but costs more.</p>
+        </div>
+        
+        <div class="tutorial-section">
+            <h2>Gameplay</h2>
+            <ol>
+                <li>You'll be assigned an event with specific requirements, budget, and expected attendees.</li>
+                <li>Read the event description and requirements carefully.</li>
+                <li>Purchase necessary items to meet the requirements from the available options.</li>
+                <li>Adjust quality investment to improve attendee ratings.</li>
+                <li>Balance your spending with sustainability ratings.</li>
+                <li>Finish planning to see your results.</li>
+                <li>Successful events earn you XP and profit.</li>
+                <li>Level up to unlock bigger events with larger budgets.</li>
+            </ol>
+        </div>
+        
+        <div class="tutorial-section">
+            <h2>Tips</h2>
+            <ul>
+                <li>Items with higher sustainability ratings cost more but help you achieve better sustainability scores.</li>
+                <li>Always check if you've satisfied all requirements before finishing.</li>
+                <li>Try to balance quality and sustainability - both affect your final XP.</li>
+                <li>As you level up, save money for bigger events that will require more expensive items.</li>
+            </ul>
+        </div>
+        
+        <div class="btn-container">
+            <a href="index.html" class="btn">Back to Menu</a>
+            <a href="game.html" class="btn">Start Game</a>
+        </div>
+    </div>
+</body>
+</html>
