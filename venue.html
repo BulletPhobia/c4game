@@ -15,6 +15,10 @@
             --white: #ffffff;
         }
         
+        *, *:before, *:after {
+            box-sizing: border-box;
+        }
+        
         .compact-stats {
             background-color: var(--light-color);
             padding: 8px 15px;
@@ -24,6 +28,7 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 15px;
+            width: 100%;
         }
         
         .player-title {
@@ -61,6 +66,9 @@
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
+            box-sizing: border-box;
+            width: 100%;
+            overflow-x: hidden;
         }
         
         h1, h2, h3 {
@@ -73,6 +81,7 @@
             padding: 20px;
             margin-bottom: 20px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
         }
         
         .btn {
@@ -95,9 +104,23 @@
         
         .venue-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: 1fr;
             gap: 20px;
             margin-top: 20px;
+            width: 100%;
+        }
+        
+        /* Adjust grid for larger screens */
+        @media (min-width: 600px) {
+            .venue-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (min-width: 900px) {
+            .venue-list {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
         
         .venue-card {
@@ -107,6 +130,7 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             transition: transform 0.2s;
             cursor: pointer;
+            width: 100%;
         }
         
         .venue-card:hover {
@@ -118,6 +142,7 @@
             color: var(--primary-color);
             margin-top: 0;
             font-size: 20px;
+            word-wrap: break-word;
         }
         
         .venue-description {
@@ -138,6 +163,7 @@
             padding: 5px 10px;
             border-radius: 4px;
             font-size: 14px;
+            margin-bottom: 5px;
         }
         
         .venue-select {
@@ -150,6 +176,7 @@
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 20px;
+            width: 100%;
         }
         
         .stats {
@@ -296,6 +323,26 @@
                 duration: 4,
                 requirements: ["Games", "Chairs", "Tables", "Snacks"],
                 level: 2
+            },
+            {
+                id: "performance",
+                title: "Small Performance",
+                description: "A group of students wants to perform acoustic music with an environmental message. Set up a small venue with the necessary equipment.",
+                budget: 600,
+                attendees: 40,
+                duration: 3,
+                requirements: ["Basic Sound System", "Chairs", "Stage Lights"],
+                level: 3
+            },
+            {
+                id: "debate",
+                title: "Debate Discussion",
+                description: "The Environmental Studies department needs you to organize a panel discussion on climate change. You need proper seating and audio setup.",
+                budget: 750,
+                attendees: 60,
+                duration: 2.5,
+                requirements: ["Microphones", "Speaker Podium", "Chairs", "Water Service"],
+                level: 3
             }
         ];
         
