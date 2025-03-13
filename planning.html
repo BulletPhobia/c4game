@@ -39,6 +39,42 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         
+        .compact-stats {
+            background-color: var(--light-color);
+            padding: 8px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .player-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 16px;
+        }
+        
+        .player-level {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 14px;
+        }
+        
+        .xp-container {
+            flex: 1;
+            font-size: 14px;
+            max-width: 200px;
+        }
+        
+        .xp-container .progress-container {
+            height: 10px;
+            margin-top: 5px;
+        }
+        
         .btn {
             background-color: var(--primary-color);
             color: var(--white);
@@ -206,21 +242,14 @@
     <div class="container">
         <h1>Plan Your Event</h1>
         
-        <div class="stats">
-            <div class="stat-box">
-                <h3>Level</h3>
-                <p id="player-level">1</p>
-            </div>
-            <div class="stat-box">
-                <h3>XP</h3>
-                <p><span id="player-xp">0</span>/<span id="xp-needed">100</span></p>
+        <div class="compact-stats">
+            <span class="player-title" id="player-title">Planning Rookie</span>
+            <span class="player-level">Level <span id="player-level">1</span></span>
+            <div class="xp-container">
+                <span>XP: <span id="player-xp">0</span>/<span id="xp-needed">100</span></span>
                 <div class="progress-container">
-                    <div id="xp-progress" class="progress-bar" style="width: 0%">0%</div>
+                    <div id="xp-progress" class="progress-bar" style="width: 0%"></div>
                 </div>
-            </div>
-            <div class="stat-box">
-                <h3>Money</h3>
-                <p>$<span id="player-money">500</span></p>
             </div>
         </div>
         
@@ -329,11 +358,34 @@
     </div>
 
     <script>
+        // Define player titles based on level
+        const playerTitles = [
+            { level: 1, title: "Planning Rookie" },
+            { level: 2, title: "Event Assistant" },
+            { level: 3, title: "Event Coordinator" },
+            { level: 4, title: "Event Manager" },
+            { level: 5, title: "Event Director" },
+            { level: 6, title: "Event Strategist" },
+            { level: 7, title: "Sustainability Expert" },
+            { level: 8, title: "Master Event Planner" }
+        ];
+
+        // Get the player's title based on level
+        function getPlayerTitle(level) {
+            // Find the highest title the player qualifies for
+            for (let i = playerTitles.length - 1; i >= 0; i--) {
+                if (level >= playerTitles[i].level) {
+                    return playerTitles[i].title;
+                }
+            }
+            // Default title if none found (shouldn't happen)
+            return "Planning Rookie";
+        }
+        
         // Game state (in a real implementation, this would be loaded from localStorage)
         let gameState = {
             playerLevel: 1,
             playerXP: 0,
-            playerMoney: 500,
             xpToNextLevel: 100,
             selectedEvent: null,
             selectedVenue: null,
@@ -341,7 +393,8 @@
             qualityInvestment: 0,
             marketingInvestment: 0,
             staffInvestment: 0,
-            spentAmount: 0
+            spentAmount: 0,
+            warnedAboutRequirements: false
         };
         
         // Try to load game state from localStorage
@@ -350,7 +403,6 @@
             const parsedState = JSON.parse(savedGameState);
             gameState.playerLevel = parsedState.playerLevel || 1;
             gameState.playerXP = parsedState.playerXP || 0;
-            gameState.playerMoney = parsedState.playerMoney || 500;
             gameState.xpToNextLevel = parsedState.xpToNextLevel || 100;
         }
         
@@ -406,6 +458,10 @@
                 description: "A busy hallway in the main building with good foot traffic for booths and small displays.",
                 cost: 50,
                 capacity: 60,
+                sizeCategory: "Medium",
+                baseRent: 50,
+                baseSustainability: 70, // Base sustainability value
+                sizeEfficiency: 1.0,    // Efficiency multiplier for size
                 sustainability: 70,
                 suitableFor: ["booth"],
                 features: ["High Visibility", "Limited Space", "No Privacy"]
@@ -416,7 +472,11 @@
                 description: "A standard classroom that can fit up to 25 people comfortably. Good for small meetings and workshops.",
                 cost: 75,
                 capacity: 25,
-                sustainability: 65,
+                sizeCategory: "Small",
+                baseRent: 75,
+                baseSustainability: 65,
+                sizeEfficiency: 1.2,    // Small venues are more efficient/sustainable
+                sustainability: 78,
                 suitableFor: ["club", "workshop"],
                 features: ["Whiteboard", "Projector", "Chairs and Tables"]
             },
@@ -426,6 +486,10 @@
                 description: "A larger classroom that can accommodate up to 40 people. Suitable for workshops and small events.",
                 cost: 100,
                 capacity: 40,
+                sizeCategory: "Medium",
+                baseRent: 100,
+                baseSustainability: 60,
+                sizeEfficiency: 1.0,
                 sustainability: 60,
                 suitableFor: ["workshop", "gamenight"],
                 features: ["Whiteboard", "Projector", "Chairs and Tables", "More Space"]
@@ -436,6 +500,10 @@
                 description: "A casual space with comfortable seating and a relaxed atmosphere. Perfect for social gatherings.",
                 cost: 80,
                 capacity: 35,
+                sizeCategory: "Medium",
+                baseRent: 80,
+                baseSustainability: 75,
+                sizeEfficiency: 1.0,
                 sustainability: 75,
                 suitableFor: ["club", "gamenight"],
                 features: ["Comfortable Seating", "Casual Atmosphere", "Some Tables"]
@@ -446,7 +514,11 @@
                 description: "An outdoor space with a sustainable garden. Great for environmentally-themed events.",
                 cost: 40,
                 capacity: 50,
-                sustainability: 95,
+                sizeCategory: "Large",
+                baseRent: 40,
+                baseSustainability: 95,
+                sizeEfficiency: 0.9,    // Large venues are less efficient
+                sustainability: 86,
                 suitableFor: ["booth", "club"],
                 features: ["Outdoor Setting", "Natural Environment", "Weather Dependent"]
             }
@@ -515,7 +587,7 @@
         const playerLevelElement = document.getElementById('player-level');
         const playerXPElement = document.getElementById('player-xp');
         const xpNeededElement = document.getElementById('xp-needed');
-        const playerMoneyElement = document.getElementById('player-money');
+        const playerTitleElement = document.getElementById('player-title');
         const xpProgressElement = document.getElementById('xp-progress');
         const eventTitleElement = document.getElementById('event-title');
         const eventDescriptionElement = document.getElementById('event-description');
@@ -542,6 +614,26 @@
         const finishPlanningButton = document.getElementById('finish-planning-button');
         const categoryFilterElement = document.getElementById('category-filter');
 
+        // Make sure XP and level are consistent across all pages
+        function initializeGameState() {
+            // Try to load game state from localStorage
+            const savedGameState = localStorage.getItem('gameState');
+            if (savedGameState) {
+                const parsedState = JSON.parse(savedGameState);
+                gameState.playerLevel = parsedState.playerLevel || 1;
+                gameState.playerXP = parsedState.playerXP || 0;
+                gameState.xpToNextLevel = parsedState.xpToNextLevel || 100;
+            }
+            
+            // Make sure the values are at least the defaults
+            gameState.playerLevel = gameState.playerLevel || 1;
+            gameState.playerXP = gameState.playerXP || 0;
+            gameState.xpToNextLevel = gameState.xpToNextLevel || 100;
+            
+            // Update the UI
+            updatePlayerStats();
+        }
+
         // Initialize the page
         function init() {
             console.log("Planning page initializing...");
@@ -566,8 +658,8 @@
             // Add venue cost to spent amount
             gameState.spentAmount = gameState.selectedVenue.cost;
             
-            // Update player stats display
-            updatePlayerStats();
+            // Initialize game state from localStorage
+            initializeGameState();
             
             // Display event and venue information
             displayEventInfo();
@@ -593,16 +685,27 @@
             console.log("Planning page initialized successfully");
         }
         
-        // Update player stats display
+        // Update player stats with title
         function updatePlayerStats() {
             playerLevelElement.textContent = gameState.playerLevel;
             playerXPElement.textContent = gameState.playerXP;
             xpNeededElement.textContent = gameState.xpToNextLevel;
-            playerMoneyElement.textContent = gameState.playerMoney;
+            
+            // Set player title based on level
+            const playerTitle = getPlayerTitle(gameState.playerLevel);
+            if (document.getElementById('player-title')) {
+                document.getElementById('player-title').textContent = playerTitle;
+            }
             
             const xpProgress = (gameState.playerXP / gameState.xpToNextLevel) * 100;
             xpProgressElement.style.width = `${xpProgress}%`;
-            xpProgressElement.textContent = `${Math.round(xpProgress)}%`;
+            
+            // Don't show text in the progress bar if it's too small
+            if (xpProgress < 10) {
+                xpProgressElement.textContent = "";
+            } else {
+                xpProgressElement.textContent = `${Math.round(xpProgress)}%`;
+            }
         }
         
         // Display event and venue information
@@ -723,7 +826,7 @@
                 itemName.textContent = item.name;
                 
                 const itemCost = document.createElement('p');
-                itemCost.textContent = `Cost: $${item.cost}`;
+                itemCost.textContent = `Cost: ${item.cost}`;
                 
                 const itemRating = document.createElement('p');
                 itemRating.textContent = `Rating: ${item.rating}/10`;
@@ -781,9 +884,10 @@
         
         // Add an item to the event
         function addItem(item) {
-            // Check if player can afford it
+            // Check if the total cost would exceed the budget limit
+            // Now we use event budget × 2 as the hard limit
             if (calculateTotalCost() + item.cost > gameState.selectedEvent.budget * 2) {
-                alert("You can't exceed twice the budget!");
+                alert("You can't exceed twice the event budget!");
                 return;
             }
             
@@ -795,7 +899,7 @@
             updateSummary();
             
             // Refresh item list to update buttons
-            const activeCategory = document.querySelector('.category-button.active').textContent;
+            const activeCategory = document.querySelector('.category-button.active')?.textContent || 'All';
             generateItemList(activeCategory);
         }
         
@@ -813,7 +917,7 @@
                 updateSummary();
                 
                 // Refresh item list to update buttons
-                const activeCategory = document.querySelector('.category-button.active').textContent;
+                const activeCategory = document.querySelector('.category-button.active')?.textContent || 'All';
                 generateItemList(activeCategory);
             }
         }
@@ -921,13 +1025,36 @@
             return Math.min(Math.max(Math.round(score), 0), 100);
         }
         
-        // Check if a specific requirement is met
+        // Fix for requirement checking - make case-insensitive and more flexible
         function isRequirementMet(requirement) {
+            // Convert requirement to lowercase for case-insensitive comparison
+            const reqLower = requirement.toLowerCase();
+            
+            // Special cases for common items that might have variations
+            if (reqLower.includes('chair')) {
+                return gameState.selectedItems.some(item =>
+                    item.name.toLowerCase().includes('chair'));
+            }
+            
+            if (reqLower.includes('table')) {
+                return gameState.selectedItems.some(item =>
+                    item.name.toLowerCase().includes('table'));
+            }
+            
+            if (reqLower.includes('refresh')) {
+                return gameState.selectedItems.some(item =>
+                    item.name.toLowerCase().includes('refresh') || 
+                    item.name.toLowerCase().includes('snack') || 
+                    item.name.toLowerCase().includes('food') ||
+                    item.name.toLowerCase().includes('drink'));
+            }
+            
+            // General case - check if any selected item matches the requirement
             return gameState.selectedItems.some(item => 
-                item.name.includes(requirement) || 
-                requirement.includes(item.name) || 
-                item.category.includes(requirement) || 
-                requirement.includes(item.category)
+                item.name.toLowerCase().includes(reqLower) || 
+                reqLower.includes(item.name.toLowerCase()) || 
+                item.category.toLowerCase().includes(reqLower) || 
+                reqLower.includes(item.category.toLowerCase())
             );
         }
         
@@ -936,86 +1063,94 @@
             return requirements.every(req => isRequirementMet(req));
         }
         
-// Update the finish button state and message
-function updateFinishButtonState() {
-    const requirements = gameState.selectedEvent.requirements;
-    const missingRequirements = getMissingRequirements(requirements);
-    
-    if (missingRequirements.length > 0) {
-        // Some requirements are not met, but we'll still allow finishing
-        finishPlanningButton.classList.remove('disabled');
-        finishPlanningButton.title = `Warning: Missing ${missingRequirements.join(', ')}`;
+        // Get a list of missing requirements
+        function getMissingRequirements(requirements) {
+            return requirements.filter(req => !isRequirementMet(req));
+        }
         
-        // Add a visual warning indicator
-        finishPlanningButton.style.backgroundColor = '#FFA500'; // Orange warning color
-    } else {
-        // All requirements met
-        finishPlanningButton.classList.remove('disabled');
-        finishPlanningButton.style.backgroundColor = 'var(--primary-color)';
-        finishPlanningButton.title = 'All requirements are met. Ready to finish.';
-    }
-}
-
-// Get a list of missing requirements
-function getMissingRequirements(requirements) {
-    return requirements.filter(req => !isRequirementMet(req));
-}
-
-// Finish planning the event and go to results
-function finishPlanning(e) {
-    e.preventDefault();
-    
-    // Check if requirements are met
-    const requirements = gameState.selectedEvent.requirements;
-    const missingRequirements = getMissingRequirements(requirements);
-    
-    if (missingRequirements.length > 0) {
-        // First click - warn about missing requirements
-        if (!gameState.warnedAboutRequirements) {
-            gameState.warnedAboutRequirements = true;
+        // Update the finish button state and message
+        function updateFinishButtonState() {
+            const requirements = gameState.selectedEvent.requirements;
+            const missingRequirements = getMissingRequirements(requirements);
             
-            const warningMessage = `Warning: Your event is missing the following requirements: ${missingRequirements.join(', ')}. 
+            if (missingRequirements.length > 0) {
+                // Some requirements are not met, but we'll still allow finishing
+                finishPlanningButton.classList.remove('disabled');
+                finishPlanningButton.title = `Warning: Missing ${missingRequirements.join(', ')}`;
+                
+                // Add a visual warning indicator
+                finishPlanningButton.style.backgroundColor = '#FFA500'; // Orange warning color
+            } else {
+                // All requirements met
+                finishPlanningButton.classList.remove('disabled');
+                finishPlanningButton.style.backgroundColor = 'var(--primary-color)';
+                finishPlanningButton.title = 'All requirements are met. Ready to finish.';
+            }
+        }
+        
+        // Finish planning the event and go to results
+        function finishPlanning(e) {
+            e.preventDefault();
             
+            // Check if requirements are met
+            const requirements = gameState.selectedEvent.requirements;
+            const missingRequirements = getMissingRequirements(requirements);
+            
+            if (missingRequirements.length > 0) {
+                // First click - warn about missing requirements
+                if (!gameState.warnedAboutRequirements) {
+                    gameState.warnedAboutRequirements = true;
+                    
+                    const warningMessage = `Warning: Your event is missing the following requirements: ${missingRequirements.join(', ')}. 
+                    
 This will result in lower attendee satisfaction and reduced XP. 
 
 Are you sure you want to continue?`;
-            
-            if (!confirm(warningMessage)) {
-                // User canceled, reset the warning flag
-                gameState.warnedAboutRequirements = false;
-                return;
+                    
+                    if (!confirm(warningMessage)) {
+                        // User canceled, reset the warning flag
+                        gameState.warnedAboutRequirements = false;
+                        return;
+                    }
+                    
+                    // User confirmed, but we'll let them continue
+                    gameState.missingRequirements = missingRequirements;
+                }
+            } else {
+                // All requirements met
+                gameState.missingRequirements = [];
             }
             
-            // User confirmed, but we'll let them continue
-            gameState.missingRequirements = missingRequirements;
+            // Store event data in localStorage for results page
+            const eventData = {
+                event: gameState.selectedEvent,
+                venue: gameState.selectedVenue,
+                items: gameState.selectedItems,
+                quality: gameState.qualityInvestment,
+                marketing: gameState.marketingInvestment,
+                staff: gameState.staffInvestment,
+                totalCost: gameState.spentAmount,
+                estimatedRating: parseInt(estimatedRatingElement.textContent),
+                sustainability: parseInt(sustainabilityScoreElement.textContent),
+                missingRequirements: gameState.missingRequirements || []
+            };
+            
+            localStorage.setItem('eventResults', JSON.stringify(eventData));
+            
+            // Save current game state
+            localStorage.setItem('gameState', JSON.stringify(gameState));
+            
+            // Redirect to results page
+            window.location.href = 'results.html';
         }
-    } else {
-        // All requirements met
-        gameState.missingRequirements = [];
-    }
-    
-    // Store event data in localStorage for results page
-    const eventData = {
-        event: gameState.selectedEvent,
-        venue: gameState.selectedVenue,
-        items: gameState.selectedItems,
-        quality: gameState.qualityInvestment,
-        marketing: gameState.marketingInvestment,
-        staff: gameState.staffInvestment,
-        totalCost: gameState.spentAmount,
-        estimatedRating: parseInt(estimatedRatingElement.textContent),
-        sustainability: parseInt(sustainabilityScoreElement.textContent),
-        missingRequirements: gameState.missingRequirements || []
-    };
-    
-    localStorage.setItem('eventResults', JSON.stringify(eventData));
-    
-    // Redirect to results page
-    window.location.href = 'results.html';
-}
         
         // Initialize when the page loads
         document.addEventListener('DOMContentLoaded', init);
+        
+        // Save game state when leaving the page
+        window.addEventListener('beforeunload', function() {
+            localStorage.setItem('gameState', JSON.stringify(gameState));
+        });
     </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game - Sustainable Event Organizer</title>
+    <title>Sustainable Event Organizer</title>
     <style>
         :root {
             --primary-color: #2e7d32;
@@ -164,50 +164,97 @@
             line-height: 1.5;
         }
         
-        .menu-button {
-            margin-top: 20px;
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        .summary-table th, .summary-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .summary-table th {
+            background-color: var(--secondary-color);
+            color: var(--white);
+        }
+        
+        .recommendation {
+            border-left: 3px solid var(--primary-color);
+            padding-left: 10px;
+            margin: 10px 0;
+            font-style: italic;
+        }
+        
+        .results-container {
             text-align: center;
         }
         
-        a.btn {
-            background-color: var(--primary-color);
-            color: var(--white);
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            margin: 5px;
-            transition: background-color 0.3s;
-            text-decoration: none;
-            display: inline-block;
+        .rating {
+            font-size: 24px;
+            margin: 10px 0;
         }
         
-        a.btn:hover {
-            background-color: var(--dark-color);
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background-color: var(--white);
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .tutorial-container {
+            margin-bottom: 20px;
+        }
+        
+        .close-button {
+            float: right;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-color);
         }
     </style>
 </head>
 <body>
-    <div id="game-container">
-        <div class="container">
-            <div class="stats">
-                <div class="stat-box">
-                    <h3>Level</h3>
-                    <p id="player-level">1</p>
-                </div>
-                <div class="stat-box">
-                    <h3>XP</h3>
-                    <p><span id="player-xp">0</span>/<span id="xp-needed">100</span></p>
-                    <div class="progress-container">
-                        <div id="xp-progress" class="progress-bar" style="width: 0%">0%</div>
-                    </div>
-                </div>
-                <div class="stat-box">
-                    <h3>Money</h3>
-                    <p>$<span id="player-money">500</span></p>
+    <div id="start-screen" class="container">
+        <h1>Sustainable Event Organizer</h1>
+        <p>Balance budget, ratings, and sustainability as you plan events and grow your career!</p>
+        <button id="start-button" onclick="startGame()">Start Game</button>
+        <button id="tutorial-button">How to Play</button>
+    </div>
+
+    <div id="game-container" class="hidden">
+        <div class="compact-stats">
+            <span class="player-title" id="player-title">Planning Rookie</span>
+            <span class="player-level">Level <span id="player-level">1</span></span>
+            <div class="xp-container">
+                <span>XP: <span id="player-xp">0</span>/<span id="xp-needed">100</span></span>
+                <div class="progress-container">
+                    <div id="xp-progress" class="progress-bar" style="width: 0%"></div>
                 </div>
             </div>
+        </div>
+        <div class="container">
+            <!-- Stats moved to compact-stats above the game container -->
         </div>
 
         <div id="event-container" class="container">
@@ -264,7 +311,7 @@
                     </div>
                 </div>
                 
-                <div style="text-align: center; margin-top: 20px;">
+                <div class="container">
                     <button id="finish-planning-button">Finish Planning</button>
                 </div>
             </div>
@@ -302,29 +349,95 @@
                 </div>
             </div>
             
-            <div style="text-align: center;">
+            <div class="container">
                 <h3 id="event-result-message">Event Completed!</h3>
                 <p id="feedback-message"></p>
                 <button id="next-event-button">Next Event</button>
             </div>
         </div>
-        
-        <div class="menu-button">
-            <a href="index.html" class="btn">Back to Menu</a>
+    </div>
+    
+    <div id="tutorial-modal" class="modal hidden">
+        <div class="modal-content">
+            <button class="close-button" id="close-tutorial">&times;</button>
+            <h2>How to Play</h2>
+            <div class="tutorial-container">
+                <h3>Game Objective</h3>
+                <p>You are an event organizer who must plan successful, sustainable events while managing your budget.</p>
+                
+                <h3>Key Concepts</h3>
+                <ul>
+                    <li><strong>Sustainability Rating:</strong> Each event needs at least a Bronze rating (50%) to succeed.</li>
+                    <li><strong>Ratings:</strong>
+                        <ul>
+                            <li>Platinum: 95% or above</li>
+                            <li>Gold: 90% or above</li>
+                            <li>Silver: 75% or above</li>
+                            <li>Bronze: 50% or above</li>
+                            <li>Below 50%: Fail</li>
+                        </ul>
+                    </li>
+                    <li><strong>Requirements:</strong> Each event has specific items you must include.</li>
+                    <li><strong>Budget:</strong> Trying to stay within budget will maximize your XP earnings.</li>
+                </ul>
+                
+                <h3>Gameplay</h3>
+                <ol>
+                    <li>Read the event description and requirements carefully.</li>
+                    <li>Purchase necessary items to meet the requirements.</li>
+                    <li>Adjust quality investment to improve attendee ratings.</li>
+                    <li>Balance your spending with sustainability ratings.</li>
+                    <li>Complete events to earn XP and level up for bigger events.</li>
+                </ol>
+                
+                <h3>Tips</h3>
+                <p>Items with higher sustainability ratings cost more but help you achieve better sustainability scores.</p>
+            </div>
+            <button id="start-from-tutorial">Start Game</button>
         </div>
     </div>
 
     <script>
+        // Initialize the game when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("DOM fully loaded and parsed");
+            init();
+        });
+        
         // Game state
+        // Define player titles based on level
+        const playerTitles = [
+            { level: 1, title: "Planning Rookie" },
+            { level: 2, title: "Event Assistant" },
+            { level: 3, title: "Event Coordinator" },
+            { level: 4, title: "Event Manager" },
+            { level: 5, title: "Event Director" },
+            { level: 6, title: "Event Strategist" },
+            { level: 7, title: "Sustainability Expert" },
+            { level: 8, title: "Master Event Planner" }
+        ];
+        
+        // Get the player's title based on level
+        function getPlayerTitle(level) {
+            // Find the highest title the player qualifies for
+            for (let i = playerTitles.length - 1; i >= 0; i--) {
+                if (level >= playerTitles[i].level) {
+                    return playerTitles[i].title;
+                }
+            }
+            // Default title if none found (shouldn't happen)
+            return "Planning Rookie";
+        }
+        
         const gameState = {
             playerLevel: 1,
             playerXP: 0,
-            playerMoney: 500,
             xpToNextLevel: 100,
             currentEvent: null,
             selectedItems: [],
             qualityInvestment: 0,
-            spentAmount: 0
+            spentAmount: 0,
+            warnedAboutRequirements: false
         };
         
         // Event templates based on levels
@@ -543,3 +656,571 @@
             { name: "Event Staff (1 person)", cost: 100, rating: 7, sustainability: 90, category: "Personnel" },
             { name: "Digital Registration System", cost: 120, rating: 9, sustainability: 90, category: "Technology" },
             { name: "Paper Registration Forms", cost: 40, rating: 4, sustainability: 40, category: "Administrative" }
+        ];
+        
+        // DOM Elements
+        const startScreen = document.getElementById('start-screen');
+        const gameContainer = document.getElementById('game-container');
+        const eventContainer = document.getElementById('event-container');
+        const resultsContainer = document.getElementById('results-container');
+        const tutorialModal = document.getElementById('tutorial-modal');
+        
+        // Buttons
+        const startButton = document.getElementById('start-button');
+        const tutorialButton = document.getElementById('tutorial-button');
+        const finishPlanningButton = document.getElementById('finish-planning-button');
+        const nextEventButton = document.getElementById('next-event-button');
+        const closeTutorialButton = document.getElementById('close-tutorial');
+        const startFromTutorialButton = document.getElementById('start-from-tutorial');
+        
+        // Player Stats
+        const playerLevelElement = document.getElementById('player-level');
+        const playerXPElement = document.getElementById('player-xp');
+        const xpNeededElement = document.getElementById('xp-needed');
+        const playerMoneyElement = document.getElementById('player-money');
+        const xpProgressElement = document.getElementById('xp-progress');
+        
+        // Event Display
+        const eventTitleElement = document.getElementById('event-title');
+        const eventDescriptionElement = document.getElementById('event-description');
+        const eventBudgetElement = document.getElementById('event-budget');
+        const eventAttendeesElement = document.getElementById('event-attendees');
+        const eventDurationElement = document.getElementById('event-duration');
+        const eventRequirementsElement = document.getElementById('event-requirements');
+        
+        // Planning Elements
+        const qualitySlider = document.getElementById('quality-slider');
+        const qualityValueElement = document.getElementById('quality-value');
+        const itemContainer = document.getElementById('item-container');
+        const selectedItemsList = document.getElementById('selected-items-list');
+        const noItemsMessage = document.getElementById('no-items-message');
+        const spentAmountElement = document.getElementById('spent-amount');
+        const budgetAmountElement = document.getElementById('budget-amount');
+        const estimatedRatingElement = document.getElementById('estimated-rating');
+        const sustainabilityScoreElement = document.getElementById('sustainability-score');
+        
+        // Results Elements
+        const finalRatingElement = document.getElementById('final-rating');
+        const finalSustainabilityElement = document.getElementById('final-sustainability');
+        const sustainabilityBadgeElement = document.getElementById('sustainability-badge');
+        const finalSpentElement = document.getElementById('final-spent');
+        const finalBudgetElement = document.getElementById('final-budget');
+        const requirementsChecklistElement = document.getElementById('requirements-checklist');
+        const xpEarnedElement = document.getElementById('xp-earned');
+        const newXpProgressElement = document.getElementById('new-xp-progress');
+        const eventResultMessageElement = document.getElementById('event-result-message');
+        const feedbackMessageElement = document.getElementById('feedback-message');
+        
+        // Initialize the game
+        function init() {
+            console.log("Initializing game...");
+            // Add event listeners
+            if (startButton) {
+                console.log("Adding start button listener");
+                startButton.addEventListener('click', startGame);
+            } else {
+                console.error("Start button not found!");
+            }
+            
+            if (tutorialButton) tutorialButton.addEventListener('click', showTutorial);
+            if (finishPlanningButton) finishPlanningButton.addEventListener('click', finishPlanning);
+            if (nextEventButton) nextEventButton.addEventListener('click', setupNextEvent);
+            if (closeTutorialButton) closeTutorialButton.addEventListener('click', hideTutorial);
+            if (startFromTutorialButton) {
+                startFromTutorialButton.addEventListener('click', () => {
+                    hideTutorial();
+                    startGame();
+                });
+            }
+            
+            if (qualitySlider) qualitySlider.addEventListener('input', updateQualityValue);
+            
+            // Initialize game state from localStorage
+            initializeGameState();
+        }
+        
+        // Start the game
+        function startGame() {
+            console.log("Starting game...");
+            if (startScreen) startScreen.classList.add('hidden');
+            if (gameContainer) gameContainer.classList.remove('hidden');
+            setupNextEvent();
+        }
+        
+        // Show the tutorial modal
+        function showTutorial() {
+            tutorialModal.classList.remove('hidden');
+        }
+        
+        // Hide the tutorial modal
+        function hideTutorial() {
+            tutorialModal.classList.add('hidden');
+        }
+        
+        // Set up the next event
+        function setupNextEvent() {
+            // Hide results and show event planning
+            resultsContainer.classList.add('hidden');
+            eventContainer.classList.remove('hidden');
+            
+            // Reset selected items and quality
+            gameState.selectedItems = [];
+            gameState.qualityInvestment = 0;
+            gameState.spentAmount = 0;
+            qualitySlider.value = 0;
+            updateQualityValue();
+            
+            // Select an appropriate event for the player's level
+            const availableEvents = eventTemplates.filter(event => event.level <= gameState.playerLevel);
+            gameState.currentEvent = availableEvents[Math.floor(Math.random() * availableEvents.length)];
+            
+            // Display event details
+            eventTitleElement.textContent = gameState.currentEvent.title;
+            eventDescriptionElement.textContent = gameState.currentEvent.description;
+            eventBudgetElement.textContent = gameState.currentEvent.budget;
+            eventAttendeesElement.textContent = gameState.currentEvent.attendees;
+            eventDurationElement.textContent = gameState.currentEvent.duration;
+            budgetAmountElement.textContent = gameState.currentEvent.budget;
+            
+            // Display requirements
+            eventRequirementsElement.innerHTML = '';
+            gameState.currentEvent.requirements.forEach(req => {
+                const li = document.createElement('li');
+                li.textContent = req;
+                eventRequirementsElement.appendChild(li);
+            });
+            
+            // Update available items based on requirements
+            updateAvailableItems();
+            
+            // Reset selected items display
+            selectedItemsList.innerHTML = '';
+            selectedItemsList.classList.add('hidden');
+            noItemsMessage.classList.remove('hidden');
+            
+            // Update UI with initial values
+            updateSpentAmount();
+            updateEstimatedRating();
+            updateSustainabilityScore();
+        }
+        
+        // Update the quality value display when slider changes
+        function updateQualityValue() {
+            const quality = parseInt(qualitySlider.value);
+            gameState.qualityInvestment = quality;
+            qualityValueElement.textContent = quality;
+            updateSpentAmount();
+            updateEstimatedRating();
+        }
+        
+        // Update available items based on event requirements
+        function updateAvailableItems() {
+            itemContainer.innerHTML = '';
+            
+            // Filter items that might be needed for requirements
+            const requirements = gameState.currentEvent.requirements;
+            const filteredItems = availableItems.filter(item => {
+                // Check if the item name or category matches any requirement
+                return requirements.some(req => 
+                    item.name.includes(req) || 
+                    req.includes(item.name) || 
+                    item.category.includes(req) || 
+                    req.includes(item.category)
+                );
+            });
+            
+            // Add some random items for variety
+            const randomItems = availableItems
+                .filter(item => !filteredItems.includes(item))
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 5 + gameState.playerLevel);
+            
+            const displayItems = [...filteredItems, ...randomItems];
+            
+            // Display the items
+            displayItems.forEach(item => {
+                const itemCard = document.createElement('div');
+                itemCard.className = 'item-card';
+                
+                const itemName = document.createElement('h4');
+                itemName.textContent = item.name;
+                
+                const itemCost = document.createElement('p');
+                itemCost.textContent = `Cost: ${item.cost}`;
+                
+                const itemRating = document.createElement('p');
+                itemRating.textContent = `Rating: ${item.rating}/10`;
+                
+                const itemSustainability = document.createElement('p');
+                itemSustainability.textContent = `Sustainability: ${item.sustainability}%`;
+                
+                const buyButton = document.createElement('button');
+                buyButton.textContent = 'Add to Event';
+                buyButton.addEventListener('click', () => addItem(item));
+                
+                itemCard.appendChild(itemName);
+                itemCard.appendChild(itemCost);
+                itemCard.appendChild(itemRating);
+                itemCard.appendChild(itemSustainability);
+                itemCard.appendChild(buyButton);
+                
+                itemContainer.appendChild(itemCard);
+            });
+        }
+        
+        // Add an item to the event
+        function addItem(item) {
+            // Check if player can afford it
+            if (gameState.spentAmount + item.cost > gameState.currentEvent.budget * 2) {
+                alert("You can't exceed twice the budget!");
+                return;
+            }
+            
+            // Add item to selected items
+            gameState.selectedItems.push(item);
+            
+            // Update selected items display
+            updateSelectedItemsDisplay();
+            
+            // Update spent amount and other stats
+            updateSpentAmount();
+            updateEstimatedRating();
+            updateSustainabilityScore();
+        }
+        
+        // Remove an item from the event
+        function removeItem(index) {
+            gameState.selectedItems.splice(index, 1);
+            
+            // Update selected items display
+            updateSelectedItemsDisplay();
+            
+            // Update spent amount and other stats
+            updateSpentAmount();
+            updateEstimatedRating();
+            updateSustainabilityScore();
+        }
+        
+        // Update the display of selected items
+        function updateSelectedItemsDisplay() {
+            if (gameState.selectedItems.length === 0) {
+                selectedItemsList.classList.add('hidden');
+                noItemsMessage.classList.remove('hidden');
+                return;
+            }
+            
+            selectedItemsList.classList.remove('hidden');
+            noItemsMessage.classList.add('hidden');
+            
+            selectedItemsList.innerHTML = '';
+            
+            gameState.selectedItems.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.textContent = `${item.name} - ${item.cost}`;
+                
+                const removeButton = document.createElement('button');
+                removeButton.textContent = 'Remove';
+                removeButton.style.marginLeft = '10px';
+                removeButton.style.padding = '3px 8px';
+                removeButton.style.fontSize = '12px';
+                removeButton.addEventListener('click', () => removeItem(index));
+                
+                li.appendChild(removeButton);
+                selectedItemsList.appendChild(li);
+            });
+        }
+        
+        // Update the spent amount display
+        function updateSpentAmount() {
+            const itemsCost = gameState.selectedItems.reduce((sum, item) => sum + item.cost, 0);
+            gameState.spentAmount = itemsCost + gameState.qualityInvestment;
+            spentAmountElement.textContent = gameState.spentAmount;
+        }
+        
+        // Update the estimated rating display
+        function updateEstimatedRating() {
+            // Base rating from quality investment
+            let rating = gameState.qualityInvestment * 0.4;
+            
+            // Add rating from items
+            if (gameState.selectedItems.length > 0) {
+                const itemRatingAvg = gameState.selectedItems.reduce((sum, item) => sum + item.rating, 0) / gameState.selectedItems.length;
+                rating += itemRatingAvg * 7;
+            }
+            
+            // Adjust for requirements
+            const requirements = gameState.currentEvent.requirements;
+            const requiredCategories = new Set(requirements.map(req => 
+                availableItems.find(item => 
+                    item.name.includes(req) || 
+                    req.includes(item.name) || 
+                    item.category.includes(req) || 
+                    req.includes(item.category)
+                )?.category || ''
+            ).filter(cat => cat !== ''));
+            
+            const selectedCategories = new Set(gameState.selectedItems.map(item => item.category));
+            
+            let requiredCategoriesMet = 0;
+            requiredCategories.forEach(cat => {
+                if (selectedCategories.has(cat)) requiredCategoriesMet++;
+            });
+            
+            const requirementCompletionRatio = requiredCategories.size > 0 ? 
+                requiredCategoriesMet / requiredCategories.size : 1;
+            
+            rating *= 0.3 + (0.7 * requirementCompletionRatio);
+            
+            // Cap at 100
+            rating = Math.min(Math.round(rating), 100);
+            
+            estimatedRatingElement.textContent = rating;
+        }
+        
+        // Update the sustainability score display
+        function updateSustainabilityScore() {
+            let score = 0;
+            
+            if (gameState.selectedItems.length > 0) {
+                score = gameState.selectedItems.reduce((sum, item) => sum + item.sustainability, 0) / gameState.selectedItems.length;
+            }
+            
+            sustainabilityScoreElement.textContent = Math.round(score);
+        }
+        
+        // Finish planning the event and see results
+        function finishPlanning() {
+            eventContainer.classList.add('hidden');
+            resultsContainer.classList.remove('hidden');
+            
+            // Calculate final values with slight randomness
+            const estimatedRating = parseInt(estimatedRatingElement.textContent);
+            const ratingVariance = Math.floor(Math.random() * 11) - 5; // -5 to +5
+            const finalRating = Math.max(0, Math.min(100, estimatedRating + ratingVariance));
+            
+            const sustainabilityScore = parseInt(sustainabilityScoreElement.textContent);
+            const sustainabilityVariance = Math.floor(Math.random() * 7) - 3; // -3 to +3
+            const finalSustainability = Math.max(0, Math.min(100, sustainabilityScore + sustainabilityVariance));
+            
+            // Display final values
+            finalRatingElement.textContent = finalRating;
+            finalSustainabilityElement.textContent = finalSustainability;
+            finalSpentElement.textContent = gameState.spentAmount;
+            finalBudgetElement.textContent = gameState.currentEvent.budget;
+            
+            // Set sustainability badge
+            let badge = "";
+            let badgeClass = "";
+            
+            if (finalSustainability >= 95) {
+                badge = "Platinum";
+                badgeClass = "badge-platinum";
+            } else if (finalSustainability >= 90) {
+                badge = "Gold";
+                badgeClass = "badge-gold";
+            } else if (finalSustainability >= 75) {
+                badge = "Silver";
+                badgeClass = "badge-silver";
+            } else if (finalSustainability >= 50) {
+                badge = "Bronze";
+                badgeClass = "badge-bronze";
+            }
+            
+            sustainabilityBadgeElement.textContent = badge;
+            sustainabilityBadgeElement.className = `badge ${badgeClass}`;
+            
+            // Check requirements
+            const requirements = gameState.currentEvent.requirements;
+            const requirementsMet = checkRequirementsMet(requirements);
+            
+            requirementsChecklistElement.innerHTML = '';
+            requirements.forEach(req => {
+                const li = document.createElement('li');
+                const isMet = isRequirementMet(req);
+                li.textContent = `${req}: ${isMet ? '✓' : '✗'}`;
+                li.style.color = isMet ? 'green' : 'red';
+                requirementsChecklistElement.appendChild(li);
+            });
+            
+            // Calculate success and XP
+            const isSuccessful = finalSustainability >= 50 && requirementsMet;
+            
+            let xpEarned = 0;
+            if (isSuccessful) {
+                // Base XP for successful event
+                xpEarned = 20 * gameState.playerLevel;
+                
+                // Bonus XP for better sustainability
+                if (finalSustainability >= 95) xpEarned += 40;
+                else if (finalSustainability >= 90) xpEarned += 30;
+                else if (finalSustainability >= 75) xpEarned += 20;
+                else if (finalSustainability >= 50) xpEarned += 10;
+                
+                // Bonus XP for good rating
+                xpEarned += Math.floor(finalRating / 10);
+                
+                // Bonus XP for staying within budget
+                if (gameState.spentAmount <= gameState.currentEvent.budget) {
+                    xpEarned += 15;
+                } else {
+                    // Penalty for going over budget
+                    const overBudgetRatio = gameState.spentAmount / gameState.currentEvent.budget;
+                    if (overBudgetRatio <= 1.2) {
+                        xpEarned -= 5;
+                    } else if (overBudgetRatio <= 1.5) {
+                        xpEarned -= 10;
+                    } else {
+                        xpEarned -= 20;
+                    }
+                }
+                
+                // Ensure minimum XP
+                xpEarned = Math.max(5, xpEarned);
+                
+                // Give player the money
+                const profit = gameState.currentEvent.budget - gameState.spentAmount;
+                const moneyEarned = profit > 0 ? profit : 0;
+                gameState.playerMoney += gameState.currentEvent.budget + moneyEarned;
+                
+                // Set success message
+                eventResultMessageElement.textContent = "Event Successfully Completed!";
+                feedbackMessageElement.textContent = `Great job! You earned ${xpEarned} XP and ${moneyEarned} in profit.`;
+                
+                // If low rating, add feedback
+                if (finalRating < 60) {
+                    feedbackMessageElement.textContent += " The attendees thought the event was a bit basic. Consider investing more in quality next time.";
+                }
+            } else {
+                // Failed event
+                eventResultMessageElement.textContent = "Event Failed!";
+                
+                if (finalSustainability < 50) {
+                    feedbackMessageElement.textContent = "The event did not meet minimum sustainability requirements. Aim for at least Bronze (50%) sustainability.";
+                } else {
+                    feedbackMessageElement.textContent = "You didn't include all required items for the event.";
+                }
+                
+                xpEarned = 5; // Consolation XP
+            }
+            
+            // Update player XP
+            gameState.playerXP += xpEarned;
+            xpEarnedElement.textContent = xpEarned;
+            
+            // Check for level up
+            checkLevelUp();
+            
+            // Update XP progress bar
+            const xpProgress = (gameState.playerXP / gameState.xpToNextLevel) * 100;
+            newXpProgressElement.style.width = `${xpProgress}%`;
+            newXpProgressElement.textContent = `${Math.round(xpProgress)}%`;
+            
+            // Update player stats display
+            updatePlayerStats();
+        }
+        
+        // Fix for requirement checking - make case-insensitive and more flexible
+        function isRequirementMet(requirement) {
+            // Convert requirement to lowercase for case-insensitive comparison
+            const reqLower = requirement.toLowerCase();
+            
+            // Special cases for common items that might have variations
+            if (reqLower.includes('chair')) {
+                return gameState.selectedItems.some(item =>
+                    item.name.toLowerCase().includes('chair'));
+            }
+            
+            if (reqLower.includes('table')) {
+                return gameState.selectedItems.some(item =>
+                    item.name.toLowerCase().includes('table'));
+            }
+            
+            if (reqLower.includes('refresh')) {
+                return gameState.selectedItems.some(item =>
+                    item.name.toLowerCase().includes('refresh') || 
+                    item.name.toLowerCase().includes('snack') || 
+                    item.name.toLowerCase().includes('food') ||
+                    item.name.toLowerCase().includes('drink'));
+            }
+            
+            // General case - check if any selected item matches the requirement
+            return gameState.selectedItems.some(item => 
+                item.name.toLowerCase().includes(reqLower) || 
+                reqLower.includes(item.name.toLowerCase()) || 
+                item.category.toLowerCase().includes(reqLower) || 
+                reqLower.includes(item.category.toLowerCase())
+            );
+        }
+        
+        // Check if all requirements are met
+        function checkRequirementsMet(requirements) {
+            return requirements.every(req => isRequirementMet(req));
+        }
+        
+        // Check if player levels up
+        function checkLevelUp() {
+            if (gameState.playerXP >= gameState.xpToNextLevel) {
+                gameState.playerLevel++;
+                gameState.playerXP -= gameState.xpToNextLevel;
+                gameState.xpToNextLevel = Math.floor(gameState.xpToNextLevel * 1.5);
+                
+                // Bonus money for leveling up
+                const levelUpBonus = 200 * gameState.playerLevel;
+                gameState.playerMoney += levelUpBonus;
+                
+                alert(`Congratulations! You've reached Level ${gameState.playerLevel}! You received a bonus of ${levelUpBonus}.`);
+            }
+        }
+        
+        // Make sure XP and level are consistent across all pages
+        function initializeGameState() {
+            // Try to load game state from localStorage
+            const savedGameState = localStorage.getItem('gameState');
+            if (savedGameState) {
+                const parsedState = JSON.parse(savedGameState);
+                gameState.playerLevel = parsedState.playerLevel || 1;
+                gameState.playerXP = parsedState.playerXP || 0;
+                gameState.xpToNextLevel = parsedState.xpToNextLevel || 100;
+            }
+            
+            // Make sure the values are at least the defaults
+            gameState.playerLevel = gameState.playerLevel || 1;
+            gameState.playerXP = gameState.playerXP || 0;
+            gameState.xpToNextLevel = gameState.xpToNextLevel || 100;
+            
+            // Update the UI
+            updatePlayerStats();
+        }
+        
+        // Update player stats display
+        function updatePlayerStats() {
+            playerLevelElement.textContent = gameState.playerLevel;
+            playerXPElement.textContent = gameState.playerXP;
+            xpNeededElement.textContent = gameState.xpToNextLevel;
+            
+            // Set player title based on level
+            const playerTitle = getPlayerTitle(gameState.playerLevel);
+            if (document.getElementById('player-title')) {
+                document.getElementById('player-title').textContent = playerTitle;
+            }
+            
+            const xpProgress = (gameState.playerXP / gameState.xpToNextLevel) * 100;
+            xpProgressElement.style.width = `${xpProgress}%`;
+            
+            // Don't show text in the progress bar if it's too small
+            if (xpProgress < 10) {
+                xpProgressElement.textContent = "";
+            } else {
+                xpProgressElement.textContent = `${Math.round(xpProgress)}%`;
+            }
+        }
+        
+        // Debug helper function
+        function checkElements() {
+            console.log("Start Screen:", startScreen);
+            console.log("Game Container:", gameContainer);
+            console.log("Start Button:", startButton);
+        }
+        
+        // Add a timeout to check elements after DOM is fully loaded
+        setTimeout(checkElements, 1000);

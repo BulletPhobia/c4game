@@ -113,22 +113,46 @@
             margin-top: 10px;
         }
         
-        .stats {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
+        .menu-button {
+            text-align: center;
+            margin-top: 20px;
         }
         
-        .stat-box {
+        /* Compact stats styling */
+        .compact-stats {
             background-color: var(--light-color);
-            padding: 10px;
-            border-radius: 4px;
-            min-width: 100px;
-            text-align: center;
-            margin-bottom: 10px;
-            flex: 1 1 200px;
-            margin: 5px;
+            padding: 8px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .player-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 16px;
+        }
+        
+        .player-level {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 14px;
+        }
+        
+        .xp-container {
+            flex: 1;
+            font-size: 14px;
+            max-width: 200px;
+        }
+        
+        .xp-container .progress-container {
+            height: 10px;
+            margin-top: 5px;
         }
         
         .progress-container {
@@ -148,9 +172,17 @@
             transition: width 0.5s;
         }
         
-        .menu-button {
-            text-align: center;
-            margin-top: 20px;
+        /* Level badges for events */
+        .level-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: var(--accent-color);
+            color: var(--text-color);
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -158,21 +190,14 @@
     <div class="container">
         <h1>Choose Your Event</h1>
         
-        <div class="stats">
-            <div class="stat-box">
-                <h3>Level</h3>
-                <p id="player-level">1</p>
-            </div>
-            <div class="stat-box">
-                <h3>XP</h3>
-                <p><span id="player-xp">0</span>/<span id="xp-needed">100</span></p>
+        <div class="compact-stats">
+            <span class="player-title" id="player-title">Planning Rookie</span>
+            <span class="player-level">Level <span id="player-level">1</span></span>
+            <div class="xp-container">
+                <span>XP: <span id="player-xp">0</span>/<span id="xp-needed">100</span></span>
                 <div class="progress-container">
-                    <div id="xp-progress" class="progress-bar" style="width: 0%">0%</div>
+                    <div id="xp-progress" class="progress-bar" style="width: 0%"></div>
                 </div>
-            </div>
-            <div class="stat-box">
-                <h3>Money</h3>
-                <p>$<span id="player-money">500</span></p>
             </div>
         </div>
         
@@ -188,11 +213,34 @@
     </div>
 
     <script>
-        // Game state (in a real implementation, this would be loaded from localStorage)
-        const gameState = {
+        // Define player titles based on level
+        const playerTitles = [
+            { level: 1, title: "Planning Rookie" },
+            { level: 2, title: "Event Assistant" },
+            { level: 3, title: "Event Coordinator" },
+            { level: 4, title: "Event Manager" },
+            { level: 5, title: "Event Director" },
+            { level: 6, title: "Event Strategist" },
+            { level: 7, title: "Sustainability Expert" },
+            { level: 8, title: "Master Event Planner" }
+        ];
+
+        // Get the player's title based on level
+        function getPlayerTitle(level) {
+            // Find the highest title the player qualifies for
+            for (let i = playerTitles.length - 1; i >= 0; i--) {
+                if (level >= playerTitles[i].level) {
+                    return playerTitles[i].title;
+                }
+            }
+            // Default title if none found (shouldn't happen)
+            return "Planning Rookie";
+        }
+        
+        // Game state (will be loaded from localStorage)
+        let gameState = {
             playerLevel: 1,
             playerXP: 0,
-            playerMoney: 500,
             xpToNextLevel: 100
         };
         
@@ -237,6 +285,46 @@
                 duration: 4,
                 requirements: ["Games", "Chairs", "Tables", "Snacks"],
                 level: 2
+            },
+            {
+                id: "performance",
+                title: "Small Performance",
+                description: "A group of students wants to perform acoustic music with an environmental message. Set up a small venue with the necessary equipment.",
+                budget: 600,
+                attendees: 40,
+                duration: 3,
+                requirements: ["Basic Sound System", "Chairs", "Stage Lights"],
+                level: 3
+            },
+            {
+                id: "debate",
+                title: "Debate Discussion",
+                description: "The Environmental Studies department needs you to organize a panel discussion on climate change. You need proper seating and audio setup.",
+                budget: 750,
+                attendees: 60,
+                duration: 2.5,
+                requirements: ["Microphones", "Speaker Podium", "Chairs", "Water Service"],
+                level: 3
+            },
+            {
+                id: "artdemo",
+                title: "Interactive Art Demo",
+                description: "The Art Department wants to host an interactive exhibition of recycled art. You need to create stations for viewing and interacting with art pieces.",
+                budget: 900,
+                attendees: 75,
+                duration: 5,
+                requirements: ["Display Tables", "Lighting", "Art Supplies", "Signage"],
+                level: 4
+            },
+            {
+                id: "fundraiser",
+                title: "Small Fundraising Event",
+                description: "The Student Council needs you to organize a fundraiser for campus sustainability projects. Set up an attractive and efficient space.",
+                budget: 1200,
+                attendees: 100,
+                duration: 6,
+                requirements: ["Cashier Station", "Donation Boxes", "Promotional Materials", "Refreshments"],
+                level: 4
             }
         ];
         
@@ -244,17 +332,42 @@
         const playerLevelElement = document.getElementById('player-level');
         const playerXPElement = document.getElementById('player-xp');
         const xpNeededElement = document.getElementById('xp-needed');
-        const playerMoneyElement = document.getElementById('player-money');
+        const playerTitleElement = document.getElementById('player-title');
         const xpProgressElement = document.getElementById('xp-progress');
         const eventListElement = document.getElementById('event-list');
         
+        // Make sure XP and level are consistent across all pages
+        function initializeGameState() {
+            // Try to load game state from localStorage
+            const savedGameState = localStorage.getItem('gameState');
+            if (savedGameState) {
+                const parsedState = JSON.parse(savedGameState);
+                gameState.playerLevel = parsedState.playerLevel || 1;
+                gameState.playerXP = parsedState.playerXP || 0;
+                gameState.xpToNextLevel = parsedState.xpToNextLevel || 100;
+            }
+            
+            // Make sure the values are at least the defaults
+            gameState.playerLevel = gameState.playerLevel || 1;
+            gameState.playerXP = gameState.playerXP || 0;
+            gameState.xpToNextLevel = gameState.xpToNextLevel || 100;
+            
+            // Update the UI
+            updatePlayerStats();
+        }
+        
         // Initialize the page
         function init() {
-            // Update player stats display
-            updatePlayerStats();
+            // Load game state from localStorage
+            initializeGameState();
             
             // Generate event cards based on player level
             generateEventCards();
+            
+            // Save game state when navigating away
+            window.addEventListener('beforeunload', function() {
+                localStorage.setItem('gameState', JSON.stringify(gameState));
+            });
         }
         
         // Update player stats display
@@ -262,11 +375,19 @@
             playerLevelElement.textContent = gameState.playerLevel;
             playerXPElement.textContent = gameState.playerXP;
             xpNeededElement.textContent = gameState.xpToNextLevel;
-            playerMoneyElement.textContent = gameState.playerMoney;
+            
+            // Set player title based on level
+            playerTitleElement.textContent = getPlayerTitle(gameState.playerLevel);
             
             const xpProgress = (gameState.playerXP / gameState.xpToNextLevel) * 100;
             xpProgressElement.style.width = `${xpProgress}%`;
-            xpProgressElement.textContent = `${Math.round(xpProgress)}%`;
+            
+            // Don't show text in the progress bar if it's too small
+            if (xpProgress < 10) {
+                xpProgressElement.textContent = "";
+            } else {
+                xpProgressElement.textContent = `${Math.round(xpProgress)}%`;
+            }
         }
         
         // Generate event cards based on player level
@@ -276,11 +397,37 @@
             // Filter events based on player level
             const availableEvents = eventTemplates.filter(event => event.level <= gameState.playerLevel);
             
-            // Create a card for each available event
-            availableEvents.forEach(event => {
+            // Get all events for display, but show locked status for higher-level events
+            let displayEvents = [...availableEvents];
+            
+            // Add some upcoming events that are locked
+            const lockedEvents = eventTemplates
+                .filter(event => event.level === gameState.playerLevel + 1)
+                .slice(0, 2); // Show max 2 upcoming events
+                
+            displayEvents = [...displayEvents, ...lockedEvents];
+            
+            // Create a card for each event
+            displayEvents.forEach(event => {
+                const isLocked = event.level > gameState.playerLevel;
+                
                 const card = document.createElement('div');
                 card.className = 'event-card';
-                card.onclick = () => selectEvent(event.id);
+                card.style.position = 'relative';
+                
+                if (isLocked) {
+                    card.style.opacity = '0.7';
+                    card.style.backgroundColor = '#ddd';
+                    card.style.cursor = 'not-allowed';
+                } else {
+                    card.onclick = () => selectEvent(event.id);
+                }
+                
+                // Add level badge
+                const levelBadge = document.createElement('div');
+                levelBadge.className = 'level-badge';
+                levelBadge.textContent = `Level ${event.level}`;
+                card.appendChild(levelBadge);
                 
                 const title = document.createElement('h3');
                 title.className = 'event-title';
@@ -288,7 +435,9 @@
                 
                 const description = document.createElement('p');
                 description.className = 'event-description';
-                description.textContent = event.description;
+                description.textContent = isLocked ? 
+                    "This event will be unlocked when you reach the required level." : 
+                    event.description;
                 
                 const details = document.createElement('div');
                 details.className = 'event-details';
@@ -321,9 +470,21 @@
                 selectButton.className = 'event-select';
                 
                 const button = document.createElement('a');
-                button.href = `venue.html?event=${event.id}`;
-                button.className = 'btn';
-                button.textContent = 'Select Event';
+                if (isLocked) {
+                    button.href = '#';
+                    button.className = 'btn';
+                    button.style.backgroundColor = '#aaa';
+                    button.textContent = 'Locked';
+                    button.style.cursor = 'not-allowed';
+                    button.onclick = (e) => {
+                        e.preventDefault();
+                        alert(`This event requires level ${event.level}. You are currently level ${gameState.playerLevel}.`);
+                    };
+                } else {
+                    button.href = `venue.html?event=${event.id}`;
+                    button.className = 'btn';
+                    button.textContent = 'Select Event';
+                }
                 selectButton.appendChild(button);
                 
                 card.appendChild(title);
@@ -340,9 +501,6 @@
         function selectEvent(eventId) {
             // Store selected event in localStorage
             localStorage.setItem('selectedEvent', eventId);
-            
-            // In a real implementation, you would redirect to the venue selection page
-            // window.location.href = 'venue.html';
         }
         
         // Initialize when the page loads

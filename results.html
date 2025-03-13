@@ -15,6 +15,42 @@
             --white: #ffffff;
         }
         
+        .compact-stats {
+            background-color: var(--light-color);
+            padding: 8px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .player-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 16px;
+        }
+        
+        .player-level {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 14px;
+        }
+        
+        .xp-container {
+            flex: 1;
+            font-size: 14px;
+            max-width: 200px;
+        }
+        
+        .xp-container .progress-container {
+            height: 10px;
+            margin-top: 5px;
+        }
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
@@ -190,10 +226,28 @@
             font-weight: bold;
             display: none;
         }
+        
+        .missing-requirements-feedback {
+            background-color: #fff3cd;
+            padding: 10px;
+            border-left: 4px solid #ffc107;
+            margin-top: 15px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="compact-stats">
+            <span class="player-title" id="player-title">Planning Rookie</span>
+            <span class="player-level">Level <span id="player-level">1</span></span>
+            <div class="xp-container">
+                <span>XP: <span id="player-xp">0</span>/<span id="xp-needed">100</span></span>
+                <div class="progress-container">
+                    <div id="stats-xp-progress" class="progress-bar" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+        
         <div class="result-header">
             <h1>Event Results</h1>
             <h2 class="result-title" id="event-title">Event Title</h2>
@@ -248,7 +302,7 @@
         </div>
         
         <div class="level-up-msg" id="level-up-message">
-            Congratulations! You've reached Level <span id="new-level">2</span>!
+            Congratulations! You've reached Level <span id="new-level">2</span> and earned the title "<span id="new-title">Event Assistant</span>"!
         </div>
         
         <div class="btn-container">
@@ -258,15 +312,43 @@
     </div>
 
     <script>
-        // Game state (would normally be stored in localStorage)
+        // Define player titles based on level
+        const playerTitles = [
+            { level: 1, title: "Planning Rookie" },
+            { level: 2, title: "Event Assistant" },
+            { level: 3, title: "Event Coordinator" },
+            { level: 4, title: "Event Manager" },
+            { level: 5, title: "Event Director" },
+            { level: 6, title: "Event Strategist" },
+            { level: 7, title: "Sustainability Expert" },
+            { level: 8, title: "Master Event Planner" }
+        ];
+
+        // Get the player's title based on level
+        function getPlayerTitle(level) {
+            // Find the highest title the player qualifies for
+            for (let i = playerTitles.length - 1; i >= 0; i--) {
+                if (level >= playerTitles[i].level) {
+                    return playerTitles[i].title;
+                }
+            }
+            // Default title if none found (shouldn't happen)
+            return "Planning Rookie";
+        }
+        
+        // Game state without money
         let gameState = {
             playerLevel: 1,
             playerXP: 0,
-            playerMoney: 500,
             xpToNextLevel: 100
         };
         
         // DOM elements
+        const playerLevelElement = document.getElementById('player-level');
+        const playerXPElement = document.getElementById('player-xp');
+        const xpNeededElement = document.getElementById('xp-needed');
+        const playerTitleElement = document.getElementById('player-title');
+        const statsXpProgressElement = document.getElementById('stats-xp-progress');
         const eventTitleElement = document.getElementById('event-title');
         const resultStatusElement = document.getElementById('result-status');
         const finalRatingElement = document.getElementById('final-rating');
@@ -287,9 +369,56 @@
         const xpProgressElement = document.getElementById('xp-progress');
         const levelUpMessageElement = document.getElementById('level-up-message');
         const newLevelElement = document.getElementById('new-level');
+        const newTitleElement = document.getElementById('new-title');
+        
+        // Make sure XP and level are consistent across all pages
+        function initializeGameState() {
+            // Try to load game state from localStorage
+            const savedGameState = localStorage.getItem('gameState');
+            if (savedGameState) {
+                const parsedState = JSON.parse(savedGameState);
+                gameState.playerLevel = parsedState.playerLevel || 1;
+                gameState.playerXP = parsedState.playerXP || 0;
+                gameState.xpToNextLevel = parsedState.xpToNextLevel || 100;
+            }
+            
+            // Make sure the values are at least the defaults
+            gameState.playerLevel = gameState.playerLevel || 1;
+            gameState.playerXP = gameState.playerXP || 0;
+            gameState.xpToNextLevel = gameState.xpToNextLevel || 100;
+            
+            // Update the UI
+            updatePlayerStats();
+        }
+        
+        // Update player stats with title
+        function updatePlayerStats() {
+            playerLevelElement.textContent = gameState.playerLevel;
+            playerXPElement.textContent = gameState.playerXP;
+            xpNeededElement.textContent = gameState.xpToNextLevel;
+            
+            // Set player title based on level
+            const playerTitle = getPlayerTitle(gameState.playerLevel);
+            if (playerTitleElement) {
+                playerTitleElement.textContent = playerTitle;
+            }
+            
+            const xpProgress = (gameState.playerXP / gameState.xpToNextLevel) * 100;
+            statsXpProgressElement.style.width = `${xpProgress}%`;
+            
+            // Don't show text in the progress bar if it's too small
+            if (xpProgress < 10) {
+                statsXpProgressElement.textContent = "";
+            } else {
+                statsXpProgressElement.textContent = `${Math.round(xpProgress)}%`;
+            }
+        }
         
         // Initialize the page
         function init() {
+            // Initialize game state
+            initializeGameState();
+            
             // Load event results from localStorage
             const eventResultsJSON = localStorage.getItem('eventResults');
             
@@ -301,12 +430,6 @@
             
             const eventResults = JSON.parse(eventResultsJSON);
             
-            // Load game state from localStorage if available
-            const gameStateJSON = localStorage.getItem('gameState');
-            if (gameStateJSON) {
-                gameState = JSON.parse(gameStateJSON);
-            }
-            
             // Display results
             displayResults(eventResults);
             
@@ -315,6 +438,11 @@
             
             // Process the event outcome
             processEventOutcome(eventResults);
+            
+            // Save game state when leaving the page
+            window.addEventListener('beforeunload', function() {
+                localStorage.setItem('gameState', JSON.stringify(gameState));
+            });
         }
         
         // Display event results
@@ -328,8 +456,8 @@
             
             // Set investments
             qualityInvestmentElement.textContent = results.quality;
-            marketingInvestmentElement.textContent = results.marketing;
-            staffInvestmentElement.textContent = results.staff;
+            marketingInvestmentElement.textContent = results.marketing || 0;
+            staffInvestmentElement.textContent = results.staff || 0;
             
             // Set venue information
             venueNameElement.textContent = results.venue.title;
@@ -340,7 +468,7 @@
             displayItems(results.items);
             
             // Display requirements checklist
-            displayRequirements(results.event.requirements, results.items);
+            displayRequirements(results.event.requirements, results.items, results.missingRequirements);
         }
         
         // Apply random variation to make results feel dynamic
@@ -401,36 +529,62 @@
             });
         }
         
-        // Display requirements checklist
-        function displayRequirements(requirements, items) {
+        // Fix for requirement checking - make case-insensitive and more flexible
+        function isRequirementMet(requirement, items) {
+            // Convert requirement to lowercase for case-insensitive comparison
+            const reqLower = requirement.toLowerCase();
+            
+            // Special cases for common items that might have variations
+            if (reqLower.includes('chair')) {
+                return items.some(item =>
+                    item.name.toLowerCase().includes('chair'));
+            }
+            
+            if (reqLower.includes('table')) {
+                return items.some(item =>
+                    item.name.toLowerCase().includes('table'));
+            }
+            
+            if (reqLower.includes('refresh')) {
+                return items.some(item =>
+                    item.name.toLowerCase().includes('refresh') || 
+                    item.name.toLowerCase().includes('snack') || 
+                    item.name.toLowerCase().includes('food') ||
+                    item.name.toLowerCase().includes('drink'));
+            }
+            
+            // General case - check if any selected item matches the requirement
+            return items.some(item => 
+                item.name.toLowerCase().includes(reqLower) || 
+                reqLower.includes(item.name.toLowerCase()) || 
+                item.category.toLowerCase().includes(reqLower) || 
+                reqLower.includes(item.category.toLowerCase())
+            );
+        }
+        
+        // Display requirements checklist with clearer indicators
+        function displayRequirements(requirements, items, missingRequirements) {
             requirementsChecklistElement.innerHTML = '';
             
             requirements.forEach(req => {
                 const li = document.createElement('li');
                 li.className = 'requirement-item';
                 
-                const isMet = isRequirementMet(req, items);
+                // First, check if it's in the missing requirements list
+                const isMissing = missingRequirements && missingRequirements.includes(req);
+                // Then double-check with our improved requirement check
+                const isMet = !isMissing && isRequirementMet(req, items);
                 
                 if (isMet) {
                     li.className += ' met';
-                    li.textContent = `${req}: ✓`;
+                    li.innerHTML = `<span style="color: green; font-weight: bold;">✓</span> ${req}`;
                 } else {
                     li.className += ' not-met';
-                    li.textContent = `${req}: ✗`;
+                    li.innerHTML = `<span style="color: red; font-weight: bold;">✗</span> ${req} <span style="color: red; font-style: italic;">(Missing)</span>`;
                 }
                 
                 requirementsChecklistElement.appendChild(li);
             });
-        }
-        
-        // Check if a requirement is met
-        function isRequirementMet(requirement, items) {
-            return items.some(item => 
-                item.name.includes(requirement) || 
-                requirement.includes(item.name) || 
-                item.category.includes(requirement) || 
-                requirement.includes(item.category)
-            );
         }
         
         // Check if all requirements are met
@@ -439,83 +593,67 @@
         }
         
         // Process event outcome with missing requirements feedback
-function processEventOutcome(results) {
-    // Update the feedback message based on requirements
-    const hasAllRequirements = !results.missingRequirements || results.missingRequirements.length === 0;
-    
-    // Set result status
-    if (results.finalSustainability >= 50) {
-        if (hasAllRequirements) {
-            resultStatusElement.innerHTML = '<h3 style="color: green;">Event Successful!</h3>';
-        } else {
-            resultStatusElement.innerHTML = '<h3 style="color: orange;">Event Partially Successful</h3>';
+        function processEventOutcome(results) {
+            // Update the feedback message based on requirements
+            const hasAllRequirements = !results.missingRequirements || results.missingRequirements.length === 0;
+            
+            // Set result status
+            if (results.finalSustainability >= 50) {
+                if (hasAllRequirements) {
+                    resultStatusElement.innerHTML = '<h3 style="color: green;">Event Successful!</h3>';
+                } else {
+                    resultStatusElement.innerHTML = '<h3 style="color: orange;">Event Partially Successful</h3>';
+                }
+            } else {
+                resultStatusElement.innerHTML = '<h3 style="color: red;">Event Failed!</h3>';
+            }
+            
+            // Calculate XP earned with penalty for missing requirements
+            let xpEarned = calculateXP(results, results.finalSustainability >= 50);
+            
+            // Apply penalty for missing requirements
+            if (!hasAllRequirements) {
+                const missingRequirementsCount = results.missingRequirements.length;
+                const requirementsPenalty = 0.25 * missingRequirementsCount; // 25% penalty per missing requirement
+                const originalXP = xpEarned;
+                xpEarned = Math.max(5, Math.round(xpEarned * (1 - requirementsPenalty)));
+                
+                if (results.missingRequirements && results.missingRequirements.length > 0) {
+                    // Add to feedback about missing requirements
+                    const missingItems = results.missingRequirements.join(', ');
+                    const requirementFeedback = `
+                        <div class="missing-requirements-feedback">
+                            <p><strong>Attendee Feedback:</strong> Several attendees complained about the lack of ${missingItems}. This reduced your XP gain from ${originalXP} to ${xpEarned}.</p>
+                        </div>
+                    `;
+                    feedbackMessageElement.innerHTML += requirementFeedback;
+                }
+            }
+            
+            // Set feedback message
+            setFeedbackMessage(results, results.finalSustainability >= 50);
+            
+            // Update player stats
+            updatePlayerStats();
+            
+            // Add XP to player
+            gameState.playerXP += xpEarned;
+            
+            // Check for level up
+            checkLevelUp();
+            
+            // Update XP display
+            xpEarnedElement.textContent = xpEarned;
+            const xpProgress = (gameState.playerXP / gameState.xpToNextLevel) * 100;
+            xpProgressElement.style.width = `${xpProgress}%`;
+            xpProgressElement.textContent = `${Math.round(xpProgress)}%`;
+            
+            // Update player stats display again after potential level up
+            updatePlayerStats();
+            
+            // Save updated game state
+            localStorage.setItem('gameState', JSON.stringify(gameState));
         }
-    } else {
-        resultStatusElement.innerHTML = '<h3 style="color: red;">Event Failed!</h3>';
-    }
-    
-    // Calculate XP earned with penalty for missing requirements
-    let xpEarned = calculateXP(results, results.finalSustainability >= 50);
-    
-    // Apply penalty for missing requirements
-    if (!hasAllRequirements) {
-        const missingRequirementsCount = results.missingRequirements.length;
-        const requirementsPenalty = 0.25 * missingRequirementsCount; // 25% penalty per missing requirement
-        const originalXP = xpEarned;
-        xpEarned = Math.max(5, Math.round(xpEarned * (1 - requirementsPenalty)));
-        
-        if (results.missingRequirements) {
-            // Add to feedback about missing requirements
-            const missingItems = results.missingRequirements.join(', ');
-            const requirementFeedback = `
-                <div class="missing-requirements-feedback" style="background-color: #fff3cd; padding: 10px; border-left: 4px solid #ffc107; margin-top: 15px;">
-                    <p><strong>Attendee Feedback:</strong> Several attendees complained about the lack of ${missingItems}. This reduced your XP gain from ${originalXP} to ${xpEarned}.</p>
-                </div>
-            `;
-            feedbackMessageElement.innerHTML += requirementFeedback;
-        }
-    }
-    
-    // Set feedback message
-    setFeedbackMessage(results, results.finalSustainability >= 50);
-    
-    // Update player stats
-    updatePlayerStats(xpEarned, results);
-    
-    // Check for level up
-    checkLevelUp();
-    
-    // Update XP display
-    xpEarnedElement.textContent = xpEarned;
-    const xpProgress = (gameState.playerXP / gameState.xpToNextLevel) * 100;
-    xpProgressElement.style.width = `${xpProgress}%`;
-    xpProgressElement.textContent = `${Math.round(xpProgress)}%`;
-    
-    // Save updated game state
-    localStorage.setItem('gameState', JSON.stringify(gameState));
-}
-
-// Display requirements checklist with clearer indicators
-function displayRequirements(requirements, items, missingRequirements) {
-    requirementsChecklistElement.innerHTML = '';
-    
-    requirements.forEach(req => {
-        const li = document.createElement('li');
-        li.className = 'requirement-item';
-        
-        const isMet = isRequirementMet(req, items);
-        
-        if (isMet) {
-            li.className += ' met';
-            li.innerHTML = `<span style="color: green; font-weight: bold;">✓</span> ${req}`;
-        } else {
-            li.className += ' not-met';
-            li.innerHTML = `<span style="color: red; font-weight: bold;">✗</span> ${req} <span style="color: red; font-style: italic;">(Missing)</span>`;
-        }
-        
-        requirementsChecklistElement.appendChild(li);
-    });
-}
         
         // Calculate XP earned
         function calculateXP(results, isSuccessful) {
@@ -585,13 +723,13 @@ function displayRequirements(requirements, items, missingRequirements) {
                     message += ` You went over budget by $${results.totalCost - results.event.budget}, which reduced your XP gain.`;
                 }
                 
-                feedbackMessageElement.textContent = message;
+                feedbackMessageElement.innerHTML = message;
             } else {
                 // Failed event
                 if (results.finalSustainability < 50) {
-                    feedbackMessageElement.textContent = `The event did not meet minimum sustainability requirements. You achieved only ${results.finalSustainability}%. Aim for at least Bronze (50%) sustainability by choosing more sustainable items and venues.`;
+                    feedbackMessageElement.innerHTML = `The event did not meet minimum sustainability requirements. You achieved only ${results.finalSustainability}%. Aim for at least Bronze (50%) sustainability by choosing more sustainable items and venues.`;
                 } else {
-                    feedbackMessageElement.textContent = "You didn't include all required items for the event. Check the requirements list and make sure you include items that match each requirement.";
+                    feedbackMessageElement.innerHTML = "You didn't include all required items for the event. Check the requirements list and make sure you include items that match each requirement.";
                 }
             }
         }
@@ -602,38 +740,28 @@ function displayRequirements(requirements, items, missingRequirements) {
             return items.reduce((sum, item) => sum + item.sustainability, 0) / items.length;
         }
         
-        // Update player stats
-        function updatePlayerStats(xpEarned, results) {
-            // Add XP
-            gameState.playerXP += xpEarned;
-            
-            // Add money if successful
-            if (results.finalSustainability >= 50 && 
-                checkRequirementsMet(results.event.requirements, results.items)) {
-                
-                // Calculate profit
-                const profit = results.event.budget - results.totalCost;
-                const moneyEarned = profit > 0 ? profit : 0;
-                
-                // Add event budget and profit to player money
-                gameState.playerMoney += moneyEarned;
-            }
-        }
-        
-        // Check if player levels up
+        // Check for level up
         function checkLevelUp() {
             if (gameState.playerXP >= gameState.xpToNextLevel) {
-                gameState.playerLevel++;
+                const newLevel = gameState.playerLevel + 1;
+                const newTitle = getPlayerTitle(newLevel);
+                
+                gameState.playerLevel = newLevel;
                 gameState.playerXP -= gameState.xpToNextLevel;
                 gameState.xpToNextLevel = Math.floor(gameState.xpToNextLevel * 1.5);
-                
-                // Bonus money for leveling up
-                const levelUpBonus = 200 * gameState.playerLevel;
-                gameState.playerMoney += levelUpBonus;
                 
                 // Show level up message
                 levelUpMessageElement.style.display = 'block';
                 newLevelElement.textContent = gameState.playerLevel;
+                newTitleElement.textContent = newTitle;
+                
+                // Update player title
+                playerTitleElement.textContent = newTitle;
+                
+                // Show level up alert
+                setTimeout(() => {
+                    alert(`Congratulations! You've reached Level ${gameState.playerLevel} and earned the title "${newTitle}"!`);
+                }, 500);
             }
         }
         
