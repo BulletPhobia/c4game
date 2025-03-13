@@ -1,160 +1,172 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sustainable Event Organizer</title>
-    <style>
-        :root {
-            --primary-color: #2e7d32;
-            --secondary-color: #81c784;
-            --light-color: #e8f5e9;
-            --dark-color: #1b5e20;
-            --accent-color: #ffeb3b;
-            --text-color: #212121;
-            --white: #ffffff;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--light-color);
-            color: var(--text-color);
-            touch-action: manipulation;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        h1, h2, h3 {
-            color: var(--primary-color);
-        }
-        
-        .container {
-            background-color: var(--white);
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        
-        .btn {
-            background-color: var(--primary-color);
-            color: var(--white);
-            border: none;
-            padding: 15px 30px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 18px;
-            margin: 15px;
-            transition: background-color 0.3s;
-            display: inline-block;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        
-        .btn:hover {
-            background-color: var(--dark-color);
-        }
-        
-        .title {
-            font-size: 36px;
-            margin-bottom: 10px;
-        }
-        
-        .subtitle {
-            font-size: 18px;
-            margin-bottom: 30px;
-            color: var(--dark-color);
-            line-height: 1.5;
-        }
-        
-        .game-info {
-            margin: 20px auto;
-            max-width: 600px;
-            text-align: left;
-            background-color: var(--light-color);
-            padding: 20px;
-            border-radius: 8px;
-        }
-        
-        .game-info h2 {
-            text-align: center;
-            margin-bottom: 15px;
-        }
-        
-        .game-info ul {
-            margin-left: 20px;
-        }
-        
-        .game-info li {
-            margin-bottom: 10px;
-        }
-        
-        .action-buttons {
-            margin-top: 30px;
-        }
-        
-        .footer {
-            margin-top: 30px;
-            font-size: 12px;
-            text-align: center;
-            color: var(--dark-color);
-        }
-        
-        @media (max-width: 600px) {
-            .btn {
-                display: block;
-                margin: 15px auto;
-                max-width: 80%;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Sustainable Event Organizer</title>
+  <style>
+    /* Global CSS fixes */
+    html, body {
+      box-sizing: border-box;
+      overflow-x: hidden;
+      width: 100%;
+    }
+    *, *:before, *:after {
+      box-sizing: inherit;
+    }
+    
+    :root {
+      --primary-color: #2e7d32;
+      --secondary-color: #81c784;
+      --light-color: #e8f5e9;
+      --dark-color: #1b5e20;
+      --accent-color: #ffeb3b;
+      --text-color: #212121;
+      --white: #ffffff;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: var(--light-color);
+      color: var(--text-color);
+      max-width: 800px;
+    }
+    
+    @media (max-width: 800px) {
+      body {
+        max-width: 100%;
+        padding: 10px;
+      }
+    }
+    
+    h1, h2, h3 {
+      color: var(--primary-color);
+    }
+    
+    .container {
+      background-color: var(--white);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    
+    .btn {
+      background-color: var(--primary-color);
+      color: var(--white);
+      border: none;
+      padding: 15px 30px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 18px;
+      margin: 15px;
+      transition: background-color 0.3s;
+      display: inline-block;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    
+    .btn:hover {
+      background-color: var(--dark-color);
+    }
+    
+    .title {
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+    
+    .subtitle {
+      font-size: 18px;
+      margin-bottom: 30px;
+      color: var(--dark-color);
+      line-height: 1.5;
+    }
+    
+    .game-info {
+      margin: 20px auto;
+      max-width: 600px;
+      text-align: left;
+      background-color: var(--light-color);
+      padding: 20px;
+      border-radius: 8px;
+    }
+    
+    .game-info h2 {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+    
+    .game-info ul {
+      margin-left: 20px;
+    }
+    
+    .game-info li {
+      margin-bottom: 10px;
+    }
+    
+    .action-buttons {
+      margin-top: 30px;
+    }
+    
+    .footer {
+      margin-top: 30px;
+      font-size: 12px;
+      text-align: center;
+      color: var(--dark-color);
+    }
+    
+    @media (max-width: 600px) {
+      .btn {
+        display: block;
+        margin: 15px auto;
+        max-width: 80%;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="title">Sustainable Event Organizer</h1>
-        <p class="subtitle">
-            Become a skilled event planner who balances budget, quality, and sustainability.
-            Host engaging events while making environmentally responsible choices!
-        </p>
-        
-        <div class="game-info">
-            <h2>Game Features</h2>
-            <ul>
-                <li><strong>Progressive Career Path:</strong> Start with small events and work your way up to managing large conventions!</li>
-                <li><strong>Sustainability Focus:</strong> Aim for Bronze, Silver, Gold, or Platinum sustainability ratings.</li>
-                <li><strong>Strategic Planning:</strong> Choose venues, purchase items, and balance your budget.</li>
-                <li><strong>Level Up System:</strong> Gain experience points and unlock more complex events and options.</li>
-            </ul>
-        </div>
-        
-        <div class="action-buttons">
-            <a href="events.html" class="btn">Start Game</a>
-            <a href="tutorial.html" class="btn">How to Play</a>
-        </div>
-        
-        <div class="footer">
-            <p>Game created for sustainable event management education.</p>
-            <p>Hosted on GitHub Pages | Made with HTML, CSS, and JavaScript</p>
-        </div>
+  <div class="container">
+    <h1 class="title">Sustainable Event Organizer</h1>
+    <p class="subtitle">
+      Become a skilled event planner who balances budget, quality, and sustainability.
+      Host engaging events while making environmentally responsible choices!
+    </p>
+    
+    <div class="game-info">
+      <h2>Game Features</h2>
+      <ul>
+        <li><strong>Progressive Career Path:</strong> Start with small events and work your way up to managing large conventions!</li>
+        <li><strong>Sustainability Focus:</strong> Aim for Bronze, Silver, Gold, or Platinum sustainability ratings.</li>
+        <li><strong>Strategic Planning:</strong> Choose venues, purchase items, and balance your budget.</li>
+        <li><strong>Level Up System:</strong> Gain experience points and unlock more complex events and options.</li>
+      </ul>
     </div>
-
-    <script>
-        // Initialize game state if it doesn't exist
-        document.addEventListener('DOMContentLoaded', function() {
-            if (!localStorage.getItem('gameState')) {
-                const initialGameState = {
-                    playerLevel: 1,
-                    playerXP: 0,
-                    xpToNextLevel: 100
-                };
-                
-                localStorage.setItem('gameState', JSON.stringify(initialGameState));
-            }
-        });
-    </script>
+    
+    <div class="action-buttons">
+      <a href="events.html" class="btn">Start Game</a>
+      <a href="tutorial.html" class="btn">How to Play</a>
+    </div>
+    
+    <div class="footer">
+      <p>Game created for sustainable event management education.</p>
+      <p>Hosted on GitHub Pages | Made with HTML, CSS, and JavaScript</p>
+    </div>
+  </div>
+  
+  <script>
+    // Initialize game state if it doesn't exist
+    document.addEventListener('DOMContentLoaded', function() {
+      if (!localStorage.getItem('gameState')) {
+        localStorage.setItem('gameState', JSON.stringify({
+          playerLevel: 1,
+          playerXP: 0,
+          xpToNextLevel: 100
+        }));
+      }
+    });
+  </script>
 </body>
 </html>
