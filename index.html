@@ -2,20 +2,29 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <!-- Ensures proper rendering and touch zooming on mobile devices -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Sustainable Event Organizer</title>
   <style>
-    /* Global CSS fixes */
-    html, body {
+    /* ------------------
+       Global CSS Resets
+    ------------------*/
+    *, *::before, *::after {
       box-sizing: border-box;
-      overflow-x: hidden;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
       width: 100%;
+      overflow-x: hidden; /* prevent horizontal scroll */
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-    *, *:before, *:after {
-      box-sizing: inherit;
-    }
-    
+
+    /* ---------------
+       Design Tokens
+    ---------------*/
     :root {
+      /* palette */
       --primary-color: #2e7d32;
       --secondary-color: #81c784;
       --light-color: #e8f5e9;
@@ -23,119 +32,157 @@
       --accent-color: #ffeb3b;
       --text-color: #212121;
       --white: #ffffff;
+
+      /* spacing & sizing */
+      --space-xs: clamp(4px, 0.8vw, 8px);
+      --space-s : clamp(8px, 1.6vw, 12px);
+      --space-m : clamp(12px, 2.4vw, 20px);
+      --space-l : clamp(16px, 3.2vw, 28px);
+
+      /* typography */
+      --fs-title: clamp(1.75rem, 6vw, 2.25rem);   /* 28 – 36px */
+      --fs-subtitle: clamp(1rem, 4.2vw, 1.125rem);/* 16 – 18px */
+      --fs-btn: clamp(1rem, 4vw, 1.125rem);
+      --fs-body: clamp(0.95rem, 3.8vw, 1rem);
     }
-    
+
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0 auto;
-      padding: 20px;
       background-color: var(--light-color);
       color: var(--text-color);
+      padding: var(--space-l);
+      /* On large viewports keep the content somewhat narrow */
       max-width: 800px;
+      margin-inline: auto;
     }
-    
-    @media (max-width: 800px) {
-      body {
-        max-width: 100%;
-        padding: 10px;
-      }
-    }
-    
+
+    /* ---------------
+       Typography
+    ---------------*/
     h1, h2, h3 {
       color: var(--primary-color);
+      margin-top: 0;
     }
-    
+
+    /* ---------------
+       Layout Helpers
+    ---------------*/
     .container {
       background-color: var(--white);
       border-radius: 8px;
-      padding: 20px;
-      margin-bottom: 20px;
+      padding: var(--space-l);
+      margin-bottom: var(--space-l);
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       text-align: center;
     }
-    
+
+    /* ---------------
+       Hero Section
+    ---------------*/
+    .title {
+      font-size: var(--fs-title);
+      margin-bottom: var(--space-s);
+      line-height: 1.2;
+    }
+    .subtitle {
+      font-size: var(--fs-subtitle);
+      margin-bottom: var(--space-m);
+      color: var(--dark-color);
+      line-height: 1.5;
+    }
+
+    /* ---------------
+       Game Info Card
+    ---------------*/
+    .game-info {
+      margin: var(--space-m) auto;
+      max-width: 600px;
+      text-align: left;
+      background-color: var(--light-color);
+      padding: var(--space-m);
+      border-radius: 8px;
+      font-size: var(--fs-body);
+    }
+    .game-info h2 {
+      text-align: center;
+      margin-bottom: var(--space-s);
+      font-size: clamp(1.25rem, 4.5vw, 1.5rem);
+    }
+    .game-info ul {
+      padding-left: var(--space-m);
+      margin: 0;
+    }
+    .game-info li {
+      margin-bottom: var(--space-s);
+    }
+
+    /* ---------------
+       Actions
+    ---------------*/
+    .action-buttons {
+      margin-top: var(--space-l);
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: var(--space-s);
+    }
+
     .btn {
       background-color: var(--primary-color);
       color: var(--white);
       border: none;
-      padding: 15px 30px;
+      padding: var(--space-s) var(--space-l);
       border-radius: 4px;
       cursor: pointer;
-      font-size: 18px;
-      margin: 15px;
-      transition: background-color 0.3s;
-      display: inline-block;
-      text-decoration: none;
+      font-size: var(--fs-btn);
       font-weight: bold;
+      text-decoration: none;
+      transition: background-color 0.3s, transform 0.1s;
+      flex: 1 1 clamp(140px, 42%, 260px); /* grow/shrink and keep within reasonable width */
+      text-align: center;
     }
-    
-    .btn:hover {
+    .btn:hover,
+    .btn:focus-visible {
       background-color: var(--dark-color);
     }
-    
-    .title {
-      font-size: 36px;
-      margin-bottom: 10px;
+    .btn:active {
+      transform: scale(0.97);
     }
-    
-    .subtitle {
-      font-size: 18px;
-      margin-bottom: 30px;
-      color: var(--dark-color);
-      line-height: 1.5;
-    }
-    
-    .game-info {
-      margin: 20px auto;
-      max-width: 600px;
-      text-align: left;
-      background-color: var(--light-color);
-      padding: 20px;
-      border-radius: 8px;
-    }
-    
-    .game-info h2 {
-      text-align: center;
-      margin-bottom: 15px;
-    }
-    
-    .game-info ul {
-      margin-left: 20px;
-    }
-    
-    .game-info li {
-      margin-bottom: 10px;
-    }
-    
-    .action-buttons {
-      margin-top: 30px;
-    }
-    
+
+    /* ---------------
+       Footer
+    ---------------*/
     .footer {
-      margin-top: 30px;
-      font-size: 12px;
+      margin-top: var(--space-l);
+      font-size: 0.75rem;
       text-align: center;
       color: var(--dark-color);
+      line-height: 1.4;
     }
-    
-    @media (max-width: 600px) {
-      .btn {
-        display: block;
-        margin: 15px auto;
-        max-width: 80%;
+
+    /* ---------------
+       Media Queries
+    ---------------*/
+    @media (max-width: 480px) {
+      /* Slightly tighter padding on very small phones */
+      body {
+        padding: var(--space-m);
+      }
+      .container {
+        padding: var(--space-m);
       }
     }
   </style>
 </head>
 <body>
-  <div class="container">
+  <main class="container">
     <h1 class="title">Sustainable Event Organizer</h1>
     <p class="subtitle">
       Become a skilled event planner who balances budget, quality, and sustainability.
       Host engaging events while making environmentally responsible choices!
     </p>
-    
-    <div class="game-info">
+
+    <!-- Feature List -->
+    <section class="game-info">
       <h2>Game Features</h2>
       <ul>
         <li><strong>Progressive Career Path:</strong> Start with small events and work your way up to managing large conventions!</li>
@@ -143,22 +190,24 @@
         <li><strong>Strategic Planning:</strong> Choose venues, purchase items, and balance your budget.</li>
         <li><strong>Level Up System:</strong> Gain experience points and unlock more complex events and options.</li>
       </ul>
-    </div>
-    
+    </section>
+
+    <!-- Primary Actions -->
     <div class="action-buttons">
       <a href="events.html" class="btn">Start Game</a>
       <a href="tutorial.html" class="btn">How to Play</a>
     </div>
-    
-    <div class="footer">
+
+    <!-- Footer Info -->
+    <footer class="footer">
       <p>Game created for sustainable event management education.</p>
-      <p>Hosted on GitHub Pages | Made with HTML, CSS, and JavaScript</p>
-    </div>
-  </div>
-  
+      <p>Hosted on GitHub Pages &bull; Made with HTML, CSS, and JavaScript</p>
+    </footer>
+  </main>
+
+  <!-- Initialise persistent game state -->
   <script>
-    // Initialize game state if it doesn't exist
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', () => {
       if (!localStorage.getItem('gameState')) {
         localStorage.setItem('gameState', JSON.stringify({
           playerLevel: 1,
