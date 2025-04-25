@@ -15,75 +15,95 @@
             --white: #ffffff;
         }
         
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--light-color);
             color: var(--text-color);
             touch-action: manipulation;
             max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 10px;
+            font-size: 14px;
+            padding-bottom: 70px; /* Space for the floating buttons */
         }
         
         h1, h2, h3 {
             color: var(--primary-color);
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+        }
+        
+        h1 {
+            font-size: 1.5em;
+        }
+        
+        h2 {
+            font-size: 1.2em;
+        }
+        
+        h3 {
+            font-size: 1em;
         }
         
         .container {
             background-color: var(--white);
             border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         
         .compact-stats {
             background-color: var(--light-color);
-            padding: 8px 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 8px;
         }
         
         .player-title {
             font-weight: bold;
             color: var(--primary-color);
-            font-size: 16px;
+            font-size: 13px;
         }
         
         .player-level {
             background-color: var(--primary-color);
             color: white;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 14px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 11px;
         }
         
         .xp-container {
             flex: 1;
-            font-size: 14px;
-            max-width: 200px;
+            font-size: 11px;
+            max-width: 150px;
         }
         
         .xp-container .progress-container {
-            height: 10px;
-            margin-top: 5px;
+            height: 6px;
+            margin-top: 3px;
         }
         
         .btn {
             background-color: var(--primary-color);
             color: var(--white);
             border: none;
-            padding: 10px 20px;
+            padding: 8px 15px;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 16px;
-            margin: 15px 0;
+            font-size: 14px;
+            margin: 10px 0;
             transition: background-color 0.3s;
             display: inline-block;
             text-decoration: none;
@@ -101,140 +121,318 @@
         .stats {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             flex-wrap: wrap;
+            gap: 5px;
         }
         
         .stat-box {
             background-color: var(--light-color);
-            padding: 10px;
+            padding: 6px 8px;
             border-radius: 4px;
-            min-width: 100px;
+            min-width: 80px;
             text-align: center;
-            margin-bottom: 10px;
-            flex: 1 1 200px;
-            margin: 5px;
+            flex: 1 1 calc(33.333% - 5px);
+            font-size: 0.85em;
+        }
+        
+        .stat-box h3 {
+            font-size: 0.9em;
+            margin: 0 0 3px 0;
         }
         
         .progress-container {
             width: 100%;
             background-color: #e0e0e0;
-            border-radius: 5px;
-            margin: 10px 0;
+            border-radius: 4px;
+            margin: 6px 0;
         }
         
         .progress-bar {
-            height: 20px;
-            border-radius: 5px;
+            height: 6px;
+            border-radius: 4px;
             background-color: var(--secondary-color);
             text-align: center;
-            line-height: 20px;
             color: var(--white);
             transition: width 0.5s;
+            font-size: 0;
         }
         
         .event-info {
             background-color: var(--light-color);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 0.9em;
         }
         
-        .slider-container {
-            margin: 15px 0;
+        .event-info h2 {
+            margin-top: 0;
+            font-size: 1.1em;
         }
         
-        input[type="range"] {
-            width: 100%;
-            margin: 10px 0;
+        .event-info p {
+            margin: 5px 0;
+            font-size: 0.9em;
         }
         
         .item-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 10px;
+            margin-top: 12px;
         }
         
         .item-card {
             background-color: var(--light-color);
             border-radius: 4px;
-            padding: 10px;
+            padding: 8px;
             position: relative;
+            font-size: 0.85em;
+        }
+        
+        .item-card h4 {
+            margin: 0 0 5px 0;
+            font-size: 1em;
+        }
+        
+        .item-card p {
+            margin: 3px 0;
+            font-size: 0.9em;
         }
         
         .item-card button {
             width: 100%;
-            margin-top: 10px;
+            margin-top: 8px;
+            padding: 5px;
+            font-size: 0.9em;
         }
         
         .menu-button {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 15px;
+        }
+        
+        .menu-button .btn {
+            margin: 5px;
+            font-size: 13px;
+            padding: 7px 12px;
         }
         
         .hidden {
             display: none !important;
         }
         
-        .tabs {
-            display: flex;
-            margin-bottom: 20px;
-            border-bottom: 2px solid var(--secondary-color);
-        }
-        
-        .tab {
-            padding: 10px 20px;
-            cursor: pointer;
-            background-color: var(--light-color);
-            border: none;
-            border-radius: 4px 4px 0 0;
-            margin-right: 5px;
-        }
-        
-        .tab.active {
-            background-color: var(--secondary-color);
-            color: var(--white);
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
         .selected-items {
-            margin-top: 20px;
-            padding: 15px;
+            margin-top: 15px;
+            padding: 10px;
             background-color: var(--light-color);
-            border-radius: 8px;
+            border-radius: 6px;
+            font-size: 0.9em;
+        }
+        
+        .selected-items ul {
+            list-style-type: none;
+            padding-left: 5px;
+        }
+        
+        .selected-items li {
+            margin-bottom: 5px;
+            font-size: 0.9em;
         }
         
         .finish-button {
             text-align: center;
-            margin-top: 30px;
+            margin-top: 20px;
         }
         
         .category-filter {
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 5px;
         }
         
         .category-button {
-            padding: 5px 10px;
+            padding: 4px 8px;
             background-color: var(--light-color);
             border: 1px solid var(--secondary-color);
-            border-radius: 4px;
+            border-radius: 3px;
             cursor: pointer;
+            font-size: 0.8em;
         }
         
         .category-button.active {
             background-color: var(--secondary-color);
             color: var(--white);
+        }
+        
+        .event-card {
+            background-color: var(--light-color);
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .event-card h2 {
+            margin-top: 0;
+            font-size: 1.1em;
+        }
+        
+        .req-tag {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin: 2px;
+            font-size: 0.8em;
+        }
+        
+        .search-bar {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        
+        .item-filter-container {
+            margin-bottom: 12px;
+        }
+        
+        .item-stat {
+            display: inline-block;
+            margin-right: 8px;
+            font-size: 0.85em;
+        }
+        
+        .item-stat-good {
+            color: green;
+        }
+        
+        .item-stat-bad {
+            color: #d32f2f;
+        }
+        
+        .item-matches-req {
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        .summary-stat {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+        }
+        
+        .summary-label {
+            font-weight: bold;
+        }
+        
+        /* Floating elements styles */
+        .floating-budget {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+            z-index: 1000;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+        
+        .budget-icon {
+            margin-right: 5px;
+            font-size: 16px;
+        }
+        
+        .floating-summary-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--accent-color);
+            color: var(--text-color);
+            padding: 8px 15px;
+            border-radius: 20px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+            z-index: 1000;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        
+        .summary-icon {
+            margin-right: 5px;
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1001;
+            display: none;
+        }
+        
+        .summary-panel {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+            border-radius: 15px 15px 0 0;
+            padding: 20px;
+            z-index: 1002;
+            max-height: 80vh;
+            overflow-y: auto;
+            transform: translateY(100%);
+            transition: transform 0.3s ease-out;
+            box-shadow: 0 -3px 10px rgba(0,0,0,0.2);
+        }
+        
+        .summary-panel.active {
+            transform: translateY(0);
+        }
+        
+        .close-summary {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #555;
+        }
+        
+        .floating-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-left: 5px;
+        }
+        
+        .indicator-good {
+            background-color: #4CAF50;
+        }
+        
+        .indicator-warning {
+            background-color: #FFC107;
+        }
+        
+        .indicator-bad {
+            background-color: #F44336;
         }
     </style>
 </head>
@@ -253,102 +451,109 @@
             </div>
         </div>
         
-        <div class="event-info">
+        <div class="event-card">
             <h2 id="event-title">Event Title</h2>
-            <p id="event-description">Event description will appear here.</p>
             <div class="stats">
                 <div class="stat-box">
                     <h3>Budget</h3>
                     <p>$<span id="event-budget">0</span></p>
                 </div>
                 <div class="stat-box">
-                    <h3>Attendees</h3>
+                    <h3>People</h3>
                     <p><span id="event-attendees">0</span></p>
                 </div>
                 <div class="stat-box">
                     <h3>Duration</h3>
-                    <p><span id="event-duration">0</span> hours</p>
+                    <p><span id="event-duration">0</span>h</p>
                 </div>
             </div>
             <div>
                 <strong>Requirements:</strong>
-                <span id="event-requirements">Requirements will appear here.</span>
+                <div id="event-requirements-tags" style="margin-top: 5px;"></div>
             </div>
-            <div>
+            <div style="margin-top: 8px;">
                 <strong>Venue:</strong>
-                <span id="venue-name">Venue will appear here.</span>
-                (<span id="venue-sustainability">0</span>% sustainability, $<span id="venue-cost">0</span>)
+                <span id="venue-name">Venue</span>
+                (<span id="venue-sustainability">0</span>% sustain., $<span id="venue-cost">0</span>)
             </div>
         </div>
         
-        <div class="tabs">
-            <button class="tab active" data-tab="items">Items & Equipment</button>
-            <button class="tab" data-tab="quality">Quality & Experience</button>
-            <button class="tab" data-tab="summary">Summary</button>
-        </div>
-        
-        <div id="items-tab" class="tab-content active">
-            <h2>Select Items for Your Event</h2>
-            
-            <div class="category-filter" id="category-filter">
-                <!-- Category buttons will be added here -->
+        <div class="main-content">
+            <div class="item-filter-container">
+                <input type="text" class="search-bar" id="item-search" placeholder="Search items...">
+                
+                <div class="category-filter" id="category-filter">
+                    <!-- Category buttons will be added here -->
+                </div>
             </div>
             
             <div class="item-list" id="item-list">
                 <!-- Item cards will be generated here by JavaScript -->
             </div>
         </div>
+    </div>
+    
+    <!-- Floating budget counter -->
+    <div class="floating-budget" id="floating-budget">
+        <span class="budget-icon">💰</span>
+        <span>$<span id="current-budget">0</span> / $<span id="max-budget">0</span></span>
+    </div>
+    
+    <!-- Floating summary button -->
+    <button class="floating-summary-btn" id="floating-summary-btn">
+        <span class="summary-icon">📋</span>
+        <span>Summary</span>
+        <span class="floating-indicator indicator-warning" id="requirements-indicator"></span>
+    </button>
+    
+    <!-- Overlay and summary panel -->
+    <div class="overlay" id="summary-overlay"></div>
+    <div class="summary-panel" id="summary-panel">
+        <button class="close-summary" id="close-summary">&times;</button>
+        <h2>Event Summary</h2>
         
-        <div id="quality-tab" class="tab-content">
-            <h2>Adjust Quality Investment</h2>
-            
-            <div class="slider-container">
-                <label for="quality-slider">Quality Investment: $<span id="quality-value">0</span></label>
-                <input type="range" id="quality-slider" min="0" max="100" value="0">
-                <p>Higher quality means better attendee ratings but costs more.</p>
+        <div class="selected-items">
+            <h3>Selected Items</h3>
+            <ul id="selected-items-list">
+                <li id="no-items-message">No items selected yet.</li>
+            </ul>
+        </div>
+        
+        <div class="event-info" style="margin-top: 15px;">
+            <h3>Event Summary</h3>
+            <div class="summary-stat">
+                <span class="summary-label">Venue:</span>
+                <span id="summary-venue">-</span>
             </div>
-            
-            <div class="slider-container">
-                <label for="marketing-slider">Marketing Investment: $<span id="marketing-value">0</span></label>
-                <input type="range" id="marketing-slider" min="0" max="100" value="0">
-                <p>Marketing improves attendance and engagement but affects your budget.</p>
+            <div class="summary-stat">
+                <span class="summary-label">Items Cost:</span>
+                <span>$<span id="summary-items">0</span></span>
             </div>
-            
-            <div class="slider-container">
-                <label for="staff-slider">Staff Investment: $<span id="staff-value">0</span></label>
-                <input type="range" id="staff-slider" min="0" max="100" value="0">
-                <p>More staff improves event organization but costs more.</p>
+            <hr style="margin: 10px 0; border: none; border-top: 1px solid #ddd;">
+            <div class="summary-stat" style="font-weight: bold;">
+                <span class="summary-label">Total Spent:</span>
+                <span>$<span id="spent-amount">0</span> / $<span id="budget-amount">0</span></span>
             </div>
         </div>
         
-        <div id="summary-tab" class="tab-content">
-            <h2>Event Summary</h2>
-            
-            <div class="selected-items">
-                <h3>Selected Items</h3>
-                <ul id="selected-items-list">
-                    <li id="no-items-message">No items selected yet.</li>
-                </ul>
+        <div class="event-info" style="margin-top: 15px;">
+            <h3>Projections</h3>
+            <div class="summary-stat">
+                <span class="summary-label">Est. Rating:</span>
+                <span><span id="estimated-rating">0</span>/100</span>
             </div>
-            
-            <div class="stats">
-                <div class="stat-box">
-                    <h3>Spent</h3>
-                    <p>$<span id="spent-amount">0</span> / $<span id="budget-amount">0</span></p>
-                </div>
-                <div class="stat-box">
-                    <h3>Est. Rating</h3>
-                    <p><span id="estimated-rating">0</span>/100</p>
-                </div>
-                <div class="stat-box">
-                    <h3>Sustainability</h3>
-                    <p><span id="sustainability-score">0</span>%</p>
-                </div>
+            <div class="summary-stat">
+                <span class="summary-label">Sustainability:</span>
+                <span><span id="sustainability-score">0</span>%</span>
             </div>
-            
-            <div class="finish-button">
-                <a href="#" id="finish-planning-button" class="btn">Finish Planning</a>
+            <div class="summary-stat">
+                <span class="summary-label">Requirements Met:</span>
+                <span id="requirements-met">0/0</span>
             </div>
+        </div>
+        
+        <div class="finish-button">
+            <a href="#" id="finish-planning-button" class="btn">Finish Planning</a>
         </div>
     </div>
     
@@ -390,9 +595,6 @@
             selectedEvent: null,
             selectedVenue: null,
             selectedItems: [],
-            qualityInvestment: 0,
-            marketingInvestment: 0,
-            staffInvestment: 0,
             spentAmount: 0,
             warnedAboutRequirements: false
         };
@@ -590,21 +792,14 @@
         const playerTitleElement = document.getElementById('player-title');
         const xpProgressElement = document.getElementById('xp-progress');
         const eventTitleElement = document.getElementById('event-title');
-        const eventDescriptionElement = document.getElementById('event-description');
         const eventBudgetElement = document.getElementById('event-budget');
         const eventAttendeesElement = document.getElementById('event-attendees');
         const eventDurationElement = document.getElementById('event-duration');
-        const eventRequirementsElement = document.getElementById('event-requirements');
+        const eventRequirementsTagsElement = document.getElementById('event-requirements-tags');
         const venueName = document.getElementById('venue-name');
         const venueSustainability = document.getElementById('venue-sustainability');
         const venueCost = document.getElementById('venue-cost');
         const itemListElement = document.getElementById('item-list');
-        const qualitySlider = document.getElementById('quality-slider');
-        const qualityValueElement = document.getElementById('quality-value');
-        const marketingSlider = document.getElementById('marketing-slider');
-        const marketingValueElement = document.getElementById('marketing-value');
-        const staffSlider = document.getElementById('staff-slider');
-        const staffValueElement = document.getElementById('staff-value');
         const selectedItemsList = document.getElementById('selected-items-list');
         const noItemsMessage = document.getElementById('no-items-message');
         const spentAmountElement = document.getElementById('spent-amount');
@@ -613,6 +808,20 @@
         const sustainabilityScoreElement = document.getElementById('sustainability-score');
         const finishPlanningButton = document.getElementById('finish-planning-button');
         const categoryFilterElement = document.getElementById('category-filter');
+        const itemSearchElement = document.getElementById('item-search');
+        const summaryVenueElement = document.getElementById('summary-venue');
+        const summaryItemsElement = document.getElementById('summary-items');
+        const requirementsMetElement = document.getElementById('requirements-met');
+        
+        // Floating elements
+        const floatingBudgetElement = document.getElementById('floating-budget');
+        const currentBudgetElement = document.getElementById('current-budget');
+        const maxBudgetElement = document.getElementById('max-budget');
+        const floatingSummaryBtn = document.getElementById('floating-summary-btn');
+        const summaryPanel = document.getElementById('summary-panel');
+        const summaryOverlay = document.getElementById('summary-overlay');
+        const closeSummaryBtn = document.getElementById('close-summary');
+        const requirementsIndicator = document.getElementById('requirements-indicator');
 
         // Make sure XP and level are consistent across all pages
         function initializeGameState() {
@@ -664,20 +873,24 @@
             // Display event and venue information
             displayEventInfo();
             
-            // Set up tabs
-            setupTabs();
-            
             // Generate item categories
             generateCategories();
             
             // Generate item list
             generateItemList();
             
-            // Add event listeners for sliders
-            setupSliders();
+            // Add event listener for search input
+            if (itemSearchElement) {
+                itemSearchElement.addEventListener('input', handleItemSearch);
+            }
+            
+            // Set up floating elements
+            setupFloatingElements();
             
             // Add event listener for finish button
-            finishPlanningButton.addEventListener('click', finishPlanning);
+            if (finishPlanningButton) {
+                finishPlanningButton.addEventListener('click', finishPlanning);
+            }
             
             // Update UI with initial values
             updateSummary();
@@ -685,69 +898,142 @@
             console.log("Planning page initialized successfully");
         }
         
+        // Setup floating elements and summary panel
+        function setupFloatingElements() {
+            // Update max budget display
+            if (maxBudgetElement && gameState.selectedEvent) {
+                maxBudgetElement.textContent = gameState.selectedEvent.budget;
+            }
+            
+            // Show/hide summary panel when floating button is clicked
+            if (floatingSummaryBtn && summaryPanel && summaryOverlay) {
+                floatingSummaryBtn.addEventListener('click', showSummaryPanel);
+                summaryOverlay.addEventListener('click', hideSummaryPanel);
+                
+                if (closeSummaryBtn) {
+                    closeSummaryBtn.addEventListener('click', hideSummaryPanel);
+                }
+            }
+            
+            // Initial update of floating budget
+            updateFloatingBudget();
+        }
+        
+        // Show summary panel
+        function showSummaryPanel() {
+            if (summaryPanel && summaryOverlay) {
+                summaryOverlay.style.display = 'block';
+                summaryPanel.classList.add('active');
+                
+                // Force a summary update when showing the panel
+                updateSummary();
+            }
+        }
+        
+        // Hide summary panel
+        function hideSummaryPanel() {
+            if (summaryPanel && summaryOverlay) {
+                summaryOverlay.style.display = 'none';
+                summaryPanel.classList.remove('active');
+            }
+        }
+        
+        // Update floating budget display
+        function updateFloatingBudget() {
+            if (currentBudgetElement) {
+                currentBudgetElement.textContent = gameState.spentAmount;
+            }
+            
+            // Update color based on budget status
+            if (floatingBudgetElement && gameState.selectedEvent) {
+                const budgetRatio = gameState.spentAmount / gameState.selectedEvent.budget;
+                
+                if (budgetRatio > 1.5) {
+                    floatingBudgetElement.style.backgroundColor = '#F44336'; // Red for way over budget
+                } else if (budgetRatio > 1) {
+                    floatingBudgetElement.style.backgroundColor = '#FF9800'; // Orange for over budget
+                } else if (budgetRatio > 0.9) {
+                    floatingBudgetElement.style.backgroundColor = '#FFC107'; // Yellow for close to budget
+                } else {
+                    floatingBudgetElement.style.backgroundColor = '#2e7d32'; // Default green
+                }
+            }
+        }
+        
+        // Update requirements indicator on floating summary button
+        function updateRequirementsIndicator() {
+            if (!requirementsIndicator) return;
+            
+            const requirements = gameState.selectedEvent.requirements;
+            const metCount = requirements.filter(req => isRequirementMet(req)).length;
+            
+            if (metCount === requirements.length) {
+                requirementsIndicator.className = 'floating-indicator indicator-good';
+            } else if (metCount > 0) {
+                requirementsIndicator.className = 'floating-indicator indicator-warning';
+            } else {
+                requirementsIndicator.className = 'floating-indicator indicator-bad';
+            }
+        }
+        
         // Update player stats with title
         function updatePlayerStats() {
-            playerLevelElement.textContent = gameState.playerLevel;
-            playerXPElement.textContent = gameState.playerXP;
-            xpNeededElement.textContent = gameState.xpToNextLevel;
+            if (playerLevelElement) playerLevelElement.textContent = gameState.playerLevel;
+            if (playerXPElement) playerXPElement.textContent = gameState.playerXP;
+            if (xpNeededElement) xpNeededElement.textContent = gameState.xpToNextLevel;
             
             // Set player title based on level
             const playerTitle = getPlayerTitle(gameState.playerLevel);
-            if (document.getElementById('player-title')) {
-                document.getElementById('player-title').textContent = playerTitle;
+            if (playerTitleElement) {
+                playerTitleElement.textContent = playerTitle;
             }
             
             const xpProgress = (gameState.playerXP / gameState.xpToNextLevel) * 100;
-            xpProgressElement.style.width = `${xpProgress}%`;
-            
-            // Don't show text in the progress bar if it's too small
-            if (xpProgress < 10) {
-                xpProgressElement.textContent = "";
-            } else {
-                xpProgressElement.textContent = `${Math.round(xpProgress)}%`;
+            if (xpProgressElement) {
+                xpProgressElement.style.width = `${xpProgress}%`;
+                
+                // Don't show text in the progress bar if it's too small
+                if (xpProgress < 10) {
+                    xpProgressElement.textContent = "";
+                } else {
+                    xpProgressElement.textContent = `${Math.round(xpProgress)}%`;
+                }
             }
         }
         
         // Display event and venue information
         function displayEventInfo() {
-            eventTitleElement.textContent = gameState.selectedEvent.title;
-            eventDescriptionElement.textContent = gameState.selectedEvent.description;
-            eventBudgetElement.textContent = gameState.selectedEvent.budget;
-            budgetAmountElement.textContent = gameState.selectedEvent.budget;
-            eventAttendeesElement.textContent = gameState.selectedEvent.attendees;
-            eventDurationElement.textContent = gameState.selectedEvent.duration;
-            eventRequirementsElement.textContent = gameState.selectedEvent.requirements.join(', ');
+            if (eventTitleElement) eventTitleElement.textContent = gameState.selectedEvent.title;
+            if (eventBudgetElement) eventBudgetElement.textContent = gameState.selectedEvent.budget;
+            if (budgetAmountElement) budgetAmountElement.textContent = gameState.selectedEvent.budget;
+            if (eventAttendeesElement) eventAttendeesElement.textContent = gameState.selectedEvent.attendees;
+            if (eventDurationElement) eventDurationElement.textContent = gameState.selectedEvent.duration;
             
-            venueName.textContent = gameState.selectedVenue.title;
-            venueSustainability.textContent = gameState.selectedVenue.sustainability;
-            venueCost.textContent = gameState.selectedVenue.cost;
-        }
-        
-        // Set up tabs
-        function setupTabs() {
-            const tabs = document.querySelectorAll('.tab');
-            const tabContents = document.querySelectorAll('.tab-content');
-            
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    // Remove active class from all tabs
-                    tabs.forEach(t => t.classList.remove('active'));
-                    
-                    // Add active class to clicked tab
-                    tab.classList.add('active');
-                    
-                    // Hide all tab contents
-                    tabContents.forEach(content => content.classList.remove('active'));
-                    
-                    // Show the corresponding tab content
-                    const tabId = tab.getAttribute('data-tab');
-                    document.getElementById(`${tabId}-tab`).classList.add('active');
+            // Display requirements as tags
+            if (eventRequirementsTagsElement) {
+                eventRequirementsTagsElement.innerHTML = '';
+                gameState.selectedEvent.requirements.forEach(req => {
+                    const tag = document.createElement('span');
+                    tag.className = 'req-tag';
+                    tag.textContent = req;
+                    eventRequirementsTagsElement.appendChild(tag);
                 });
-            });
+            }
+            
+            if (venueName) venueName.textContent = gameState.selectedVenue.title;
+            if (venueSustainability) venueSustainability.textContent = gameState.selectedVenue.sustainability;
+            if (venueCost) venueCost.textContent = gameState.selectedVenue.cost;
+            
+            // Update summary venue
+            if (summaryVenueElement) {
+                summaryVenueElement.textContent = `${gameState.selectedVenue.title} (${gameState.selectedVenue.cost})`;
+            }
         }
         
         // Generate item categories for filtering
         function generateCategories() {
+            if (!categoryFilterElement) return;
+            
             // Get unique categories
             const categories = [...new Set(availableItems.map(item => item.category))];
             
@@ -755,7 +1041,7 @@
             const allButton = document.createElement('button');
             allButton.className = 'category-button active';
             allButton.textContent = 'All';
-            allButton.addEventListener('click', () => filterItems('All'));
+            allButton.addEventListener('click', () => filterItems('All', ''));
             categoryFilterElement.appendChild(allButton);
             
             // Add category buttons
@@ -763,13 +1049,20 @@
                 const button = document.createElement('button');
                 button.className = 'category-button';
                 button.textContent = category;
-                button.addEventListener('click', () => filterItems(category));
+                button.addEventListener('click', () => filterItems(category, itemSearchElement ? itemSearchElement.value : ''));
                 categoryFilterElement.appendChild(button);
             });
         }
         
-        // Filter items by category
-        function filterItems(category) {
+        // Handle item search
+        function handleItemSearch() {
+            const searchTerm = itemSearchElement.value.toLowerCase();
+            const activeCategory = document.querySelector('.category-button.active')?.textContent || 'All';
+            filterItems(activeCategory, searchTerm);
+        }
+        
+        // Filter items by category and search term
+        function filterItems(category, searchTerm = '') {
             // Update active button
             const buttons = document.querySelectorAll('.category-button');
             buttons.forEach(button => {
@@ -780,11 +1073,13 @@
             });
             
             // Filter and regenerate items
-            generateItemList(category);
+            generateItemList(category, searchTerm);
         }
         
         // Generate item list
-        function generateItemList(filterCategory = 'All') {
+        function generateItemList(filterCategory = 'All', searchTerm = '') {
+            if (!itemListElement) return;
+            
             itemListElement.innerHTML = '';
             
             // Filter items that might be needed for requirements
@@ -794,6 +1089,14 @@
             // Apply category filter if not "All"
             if (filterCategory !== 'All') {
                 filteredItems = filteredItems.filter(item => item.category === filterCategory);
+            }
+            
+            // Apply search term filter if provided
+            if (searchTerm) {
+                filteredItems = filteredItems.filter(item => 
+                    item.name.toLowerCase().includes(searchTerm) || 
+                    item.category.toLowerCase().includes(searchTerm)
+                );
             }
             
             // Highlight items that match requirements
@@ -819,20 +1122,42 @@
                 
                 // Highlight items that match requirements
                 if (highlightedItems.includes(item)) {
-                    itemCard.style.borderLeft = '4px solid var(--primary-color)';
+                    itemCard.classList.add('item-matches-req');
                 }
                 
-                const itemName = document.createElement('h3');
+                const itemName = document.createElement('h4');
                 itemName.textContent = item.name;
                 
-                const itemCost = document.createElement('p');
-                itemCost.textContent = `Cost: ${item.cost}`;
+                // Create item stats with color indicators
+                const costSpan = document.createElement('span');
+                costSpan.className = 'item-stat';
+                costSpan.textContent = `${item.cost}`;
+                if (item.cost > gameState.selectedEvent.budget * 0.3) {
+                    costSpan.classList.add('item-stat-bad');
+                }
                 
-                const itemRating = document.createElement('p');
-                itemRating.textContent = `Rating: ${item.rating}/10`;
+                const ratingSpan = document.createElement('span');
+                ratingSpan.className = 'item-stat';
+                ratingSpan.textContent = `Rating: ${item.rating}`;
+                if (item.rating >= 7) {
+                    ratingSpan.classList.add('item-stat-good');
+                } else if (item.rating <= 4) {
+                    ratingSpan.classList.add('item-stat-bad');
+                }
                 
-                const itemSustainability = document.createElement('p');
-                itemSustainability.textContent = `Sustainability: ${item.sustainability}%`;
+                const sustainabilitySpan = document.createElement('span');
+                sustainabilitySpan.className = 'item-stat';
+                sustainabilitySpan.textContent = `${item.sustainability}%`;
+                if (item.sustainability >= 80) {
+                    sustainabilitySpan.classList.add('item-stat-good');
+                } else if (item.sustainability <= 40) {
+                    sustainabilitySpan.classList.add('item-stat-bad');
+                }
+                
+                itemCard.appendChild(itemName);
+                itemCard.appendChild(costSpan);
+                itemCard.appendChild(ratingSpan);
+                itemCard.appendChild(sustainabilitySpan);
                 
                 const buyButton = document.createElement('button');
                 
@@ -844,42 +1169,24 @@
                     buyButton.addEventListener('click', () => removeItem(item));
                     buyButton.style.backgroundColor = '#f44336';
                 } else {
-                    buyButton.textContent = 'Add to Event';
+                    buyButton.textContent = 'Add';
                     buyButton.addEventListener('click', () => addItem(item));
                 }
                 
-                itemCard.appendChild(itemName);
-                itemCard.appendChild(itemCost);
-                itemCard.appendChild(itemRating);
-                itemCard.appendChild(itemSustainability);
                 itemCard.appendChild(buyButton);
                 
                 itemListElement.appendChild(itemCard);
             });
-        }
-        
-        // Set up sliders
-        function setupSliders() {
-            qualitySlider.addEventListener('input', () => {
-                const quality = parseInt(qualitySlider.value);
-                gameState.qualityInvestment = quality;
-                qualityValueElement.textContent = quality;
-                updateSummary();
-            });
             
-            marketingSlider.addEventListener('input', () => {
-                const marketing = parseInt(marketingSlider.value);
-                gameState.marketingInvestment = marketing;
-                marketingValueElement.textContent = marketing;
-                updateSummary();
-            });
-            
-            staffSlider.addEventListener('input', () => {
-                const staff = parseInt(staffSlider.value);
-                gameState.staffInvestment = staff;
-                staffValueElement.textContent = staff;
-                updateSummary();
-            });
+            // No items found message
+            if (sortedItems.length === 0) {
+                const noItems = document.createElement('p');
+                noItems.textContent = 'No items match your search.';
+                noItems.style.gridColumn = '1 / -1';
+                noItems.style.textAlign = 'center';
+                noItems.style.padding = '20px';
+                itemListElement.appendChild(noItems);
+            }
         }
         
         // Add an item to the event
@@ -897,10 +1204,13 @@
             // Update UI
             updateSelectedItemsDisplay();
             updateSummary();
+            updateFloatingBudget();
+            updateRequirementsIndicator();
             
             // Refresh item list to update buttons
             const activeCategory = document.querySelector('.category-button.active')?.textContent || 'All';
-            generateItemList(activeCategory);
+            const searchTerm = itemSearchElement ? itemSearchElement.value.toLowerCase() : '';
+            generateItemList(activeCategory, searchTerm);
         }
         
         // Remove an item from the event
@@ -915,28 +1225,59 @@
                 // Update UI
                 updateSelectedItemsDisplay();
                 updateSummary();
+                updateFloatingBudget();
+                updateRequirementsIndicator();
                 
                 // Refresh item list to update buttons
                 const activeCategory = document.querySelector('.category-button.active')?.textContent || 'All';
-                generateItemList(activeCategory);
+                const searchTerm = itemSearchElement ? itemSearchElement.value.toLowerCase() : '';
+                generateItemList(activeCategory, searchTerm);
             }
         }
         
         // Update the display of selected items
         function updateSelectedItemsDisplay() {
+            if (!selectedItemsList) return;
+            
             if (gameState.selectedItems.length === 0) {
-                noItemsMessage.style.display = 'list-item';
+                if (noItemsMessage) {
+                    noItemsMessage.style.display = 'list-item';
+                }
                 selectedItemsList.innerHTML = '';
                 selectedItemsList.appendChild(noItemsMessage);
                 return;
             }
             
-            noItemsMessage.style.display = 'none';
+            if (noItemsMessage) {
+                noItemsMessage.style.display = 'none';
+            }
             selectedItemsList.innerHTML = '';
             
             gameState.selectedItems.forEach(item => {
                 const li = document.createElement('li');
-                li.textContent = `${item.name} - ${item.cost} (Rating: ${item.rating}/10, Sustainability: ${item.sustainability}%)`;
+                
+                const itemSpan = document.createElement('span');
+                itemSpan.textContent = `${item.name}`;
+                
+                const costSpan = document.createElement('span');
+                costSpan.textContent = ` - ${item.cost}`;
+                costSpan.style.color = '#666';
+                
+                li.appendChild(itemSpan);
+                li.appendChild(costSpan);
+                
+                const removeButton = document.createElement('button');
+                removeButton.textContent = '✕';
+                removeButton.style.marginLeft = '5px';
+                removeButton.style.padding = '0 5px';
+                removeButton.style.fontSize = '12px';
+                removeButton.style.background = 'none';
+                removeButton.style.border = 'none';
+                removeButton.style.color = '#f44336';
+                removeButton.style.cursor = 'pointer';
+                removeButton.addEventListener('click', () => removeItem(item));
+                
+                li.appendChild(removeButton);
                 selectedItemsList.appendChild(li);
             });
         }
@@ -945,50 +1286,81 @@
         function calculateTotalCost() {
             const itemsCost = gameState.selectedItems.reduce((sum, item) => sum + item.cost, 0);
             const venueCost = gameState.selectedVenue.cost;
-            const qualityCost = gameState.qualityInvestment;
-            const marketingCost = gameState.marketingInvestment;
-            const staffCost = gameState.staffInvestment;
             
-            return itemsCost + venueCost + qualityCost + marketingCost + staffCost;
+            return itemsCost + venueCost;
+        }
+        
+        // Calculate items cost only
+        function calculateItemsCost() {
+            return gameState.selectedItems.reduce((sum, item) => sum + item.cost, 0);
         }
         
         // Update the summary tab
         function updateSummary() {
             // Calculate costs
+            const itemsCost = calculateItemsCost();
             const totalCost = calculateTotalCost();
             gameState.spentAmount = totalCost;
             
             // Update spent amount
-            spentAmountElement.textContent = totalCost;
+            if (spentAmountElement) {
+                spentAmountElement.textContent = totalCost;
+            }
+            
+            // Update summary items
+            if (summaryItemsElement) {
+                summaryItemsElement.textContent = itemsCost;
+            }
             
             // Calculate estimated rating
             let rating = calculateEstimatedRating();
-            estimatedRatingElement.textContent = rating;
+            if (estimatedRatingElement) {
+                estimatedRatingElement.textContent = rating;
+            }
             
             // Calculate sustainability score
             let sustainability = calculateSustainabilityScore();
-            sustainabilityScoreElement.textContent = sustainability;
+            if (sustainabilityScoreElement) {
+                sustainabilityScoreElement.textContent = sustainability;
+            }
+            
+            // Update requirements met
+            updateRequirementsMet();
             
             // Update finish button state
             updateFinishButtonState();
         }
         
+        // Update requirements met display
+        function updateRequirementsMet() {
+            if (!requirementsMetElement) return;
+            
+            const requirements = gameState.selectedEvent.requirements;
+            const metCount = requirements.filter(req => isRequirementMet(req)).length;
+            
+            requirementsMetElement.textContent = `${metCount}/${requirements.length}`;
+            
+            // Color based on completion
+            if (metCount === requirements.length) {
+                requirementsMetElement.style.color = 'green';
+                requirementsMetElement.style.fontWeight = 'bold';
+            } else {
+                requirementsMetElement.style.color = 'orange';
+            }
+            
+            // Also update the floating indicator
+            updateRequirementsIndicator();
+        }
+        
         // Calculate estimated rating
         function calculateEstimatedRating() {
-            // Base rating from quality investment
-            let rating = gameState.qualityInvestment * 0.4;
+            // Base rating from items
+            let rating = 40; // Base rating
             
-            // Add rating from items
             if (gameState.selectedItems.length > 0) {
                 const itemRatingAvg = gameState.selectedItems.reduce((sum, item) => sum + item.rating, 0) / gameState.selectedItems.length;
                 rating += itemRatingAvg * 7;
             }
-            
-            // Add rating from marketing
-            rating += gameState.marketingInvestment * 0.2;
-            
-            // Add rating from staff
-            rating += gameState.staffInvestment * 0.15;
             
             // Adjust for requirements
             const requirements = gameState.selectedEvent.requirements;
@@ -1012,14 +1384,6 @@
                 const itemSustainabilityAvg = gameState.selectedItems.reduce((sum, item) => sum + item.sustainability, 0) / gameState.selectedItems.length;
                 score = (score + itemSustainabilityAvg) / 2; // Average with venue sustainability
             }
-            
-            // Slight penalty for excessive quality investment
-            if (gameState.qualityInvestment > 50) {
-                score -= (gameState.qualityInvestment - 50) * 0.1;
-            }
-            
-            // Slight penalty for marketing
-            score -= gameState.marketingInvestment * 0.05;
             
             // Ensure score is between 0 and 100
             return Math.min(Math.max(Math.round(score), 0), 100);
@@ -1070,6 +1434,8 @@
         
         // Update the finish button state and message
         function updateFinishButtonState() {
+            if (!finishPlanningButton) return;
+            
             const requirements = gameState.selectedEvent.requirements;
             const missingRequirements = getMissingRequirements(requirements);
             
@@ -1090,7 +1456,7 @@
         
         // Finish planning the event and go to results
         function finishPlanning(e) {
-            e.preventDefault();
+            if (e) e.preventDefault();
             
             // Check if requirements are met
             const requirements = gameState.selectedEvent.requirements;
@@ -1126,12 +1492,9 @@ Are you sure you want to continue?`;
                 event: gameState.selectedEvent,
                 venue: gameState.selectedVenue,
                 items: gameState.selectedItems,
-                quality: gameState.qualityInvestment,
-                marketing: gameState.marketingInvestment,
-                staff: gameState.staffInvestment,
                 totalCost: gameState.spentAmount,
-                estimatedRating: parseInt(estimatedRatingElement.textContent),
-                sustainability: parseInt(sustainabilityScoreElement.textContent),
+                estimatedRating: parseInt(estimatedRatingElement ? estimatedRatingElement.textContent : 0),
+                sustainability: parseInt(sustainabilityScoreElement ? sustainabilityScoreElement.textContent : 0),
                 missingRequirements: gameState.missingRequirements || []
             };
             

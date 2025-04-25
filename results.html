@@ -13,66 +13,87 @@
             --accent-color: #ffeb3b;
             --text-color: #212121;
             --white: #ffffff;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --error-color: #f44336;
         }
         
-        .compact-stats {
-            background-color: var(--light-color);
-            padding: 8px 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        
-        .player-title {
-            font-weight: bold;
-            color: var(--primary-color);
-            font-size: 16px;
-        }
-        
-        .player-level {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 14px;
-        }
-        
-        .xp-container {
-            flex: 1;
-            font-size: 14px;
-            max-width: 200px;
-        }
-        
-        .xp-container .progress-container {
-            height: 10px;
-            margin-top: 5px;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
             background-color: var(--light-color);
             color: var(--text-color);
-            touch-action: manipulation;
             max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 12px;
+            font-size: 14px;
         }
         
         h1, h2, h3 {
             color: var(--primary-color);
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+        }
+        
+        h1 {
+            font-size: 1.5em;
+        }
+        
+        h2 {
+            font-size: 1.2em;
+        }
+        
+        h3 {
+            font-size: 1em;
         }
         
         .container {
             background-color: var(--white);
             border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .compact-stats {
+            background-color: var(--light-color);
+            padding: 8px 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .player-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 13px;
+        }
+        
+        .player-level {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 11px;
+        }
+        
+        .xp-container {
+            flex: 1;
+            font-size: 11px;
+            max-width: 150px;
+        }
+        
+        .xp-container .progress-container {
+            height: 6px;
+            margin-top: 3px;
         }
         
         .btn {
@@ -82,69 +103,67 @@
             padding: 10px 20px;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 16px;
-            margin: 15px 5px;
+            font-size: 15px;
+            margin: 10px 5px;
             transition: background-color 0.3s;
             display: inline-block;
             text-decoration: none;
+            text-align: center;
         }
         
         .btn:hover {
             background-color: var(--dark-color);
         }
         
-        .stats {
-            display: flex;
-            justify-content: space-between;
+        .progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            margin: 8px 0;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            border-radius: 4px;
+            background-color: var(--secondary-color);
+            text-align: center;
+            color: var(--white);
+            transition: width 0.5s;
+            font-size: 0;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
             margin-bottom: 15px;
-            flex-wrap: wrap;
         }
         
         .stat-box {
             background-color: var(--light-color);
             padding: 10px;
             border-radius: 4px;
-            min-width: 100px;
             text-align: center;
-            margin-bottom: 10px;
-            flex: 1 1 200px;
-            margin: 5px;
         }
         
-        .result-header {
-            text-align: center;
-            margin-bottom: 30px;
+        .stat-box h3 {
+            font-size: 0.9em;
+            margin-bottom: 5px;
         }
         
-        .result-title {
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
-        
-        .progress-container {
-            width: 100%;
-            background-color: #e0e0e0;
-            border-radius: 5px;
-            margin: 10px 0;
-        }
-        
-        .progress-bar {
-            height: 20px;
-            border-radius: 5px;
-            background-color: var(--secondary-color);
-            text-align: center;
-            line-height: 20px;
-            color: var(--white);
-            transition: width 0.5s;
+        .stat-value {
+            font-size: 1.2em;
+            font-weight: bold;
         }
         
         .badge {
             display: inline-block;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 12px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 11px;
             font-weight: bold;
-            margin-left: 5px;
+            margin-left: 3px;
+            vertical-align: middle;
         }
         
         .badge-bronze {
@@ -169,29 +188,35 @@
         
         .feedback {
             background-color: var(--light-color);
-            padding: 15px;
-            border-radius: 8px;
-            margin: 20px 0;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 12px 0;
+            font-size: 0.9em;
         }
         
         .requirements {
-            margin: 20px 0;
+            margin: 15px 0;
+        }
+        
+        .requirements h3 {
+            margin-bottom: 8px;
         }
         
         .requirement-item {
-            padding: 5px 0;
+            padding: 3px 0;
+            font-size: 0.9em;
         }
         
         .met {
-            color: green;
+            color: var(--success-color);
         }
         
         .not-met {
-            color: red;
+            color: var(--error-color);
         }
         
         .event-summary {
-            margin-top: 20px;
+            margin-top: 15px;
         }
         
         .summary-list {
@@ -200,29 +225,36 @@
         }
         
         .summary-list li {
-            padding: 5px 0;
+            padding: 4px 0;
             border-bottom: 1px solid #eee;
+            font-size: 0.9em;
         }
         
         .xp-gain {
             text-align: center;
-            margin: 30px 0;
-            font-size: 18px;
+            margin: 20px 0;
+        }
+        
+        .xp-gain h3 {
+            margin-bottom: 5px;
         }
         
         .btn-container {
             text-align: center;
-            margin-top: 30px;
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
         }
         
         .level-up-msg {
             background-color: var(--accent-color);
             color: var(--text-color);
-            padding: 15px;
+            padding: 12px;
             border-radius: 8px;
-            margin: 20px 0;
+            margin: 15px 0;
             text-align: center;
-            font-size: 18px;
+            font-size: 15px;
             font-weight: bold;
             display: none;
         }
@@ -231,7 +263,96 @@
             background-color: #fff3cd;
             padding: 10px;
             border-left: 4px solid #ffc107;
-            margin-top: 15px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        
+        .result-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .result-status {
+            margin-left: auto;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        
+        .status-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .status-partial {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .status-failed {
+            background-color: var(--error-color);
+            color: white;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid var(--secondary-color);
+            margin-bottom: 15px;
+        }
+        
+        .tab {
+            padding: 8px 15px;
+            cursor: pointer;
+            background-color: var(--light-color);
+            border: none;
+            border-radius: 4px 4px 0 0;
+            margin-right: 2px;
+            font-size: 0.9em;
+        }
+        
+        .tab.active {
+            background-color: var(--secondary-color);
+            color: var(--white);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .collapsible-section {
+            margin-bottom: 10px;
+        }
+        
+        .collapsible-header {
+            background-color: var(--light-color);
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .collapsible-content {
+            padding: 10px;
+            border: 1px solid var(--light-color);
+            border-top: none;
+            border-radius: 0 0 4px 4px;
+            display: none;
+        }
+        
+        .collapsible-icon {
+            transition: transform 0.3s;
+        }
+        
+        .expanded .collapsible-icon {
+            transform: rotate(180deg);
         }
     </style>
 </head>
@@ -250,59 +371,85 @@
         
         <div class="result-header">
             <h1>Event Results</h1>
-            <h2 class="result-title" id="event-title">Event Title</h2>
-            <div id="result-status"></div>
+            <div id="result-status" class="result-status"></div>
         </div>
         
-        <div class="stats">
+        <h2 id="event-title">Event Title</h2>
+        
+        <div class="stats-grid">
             <div class="stat-box">
                 <h3>Rating</h3>
-                <p><span id="final-rating">0</span>/100</p>
+                <div class="stat-value"><span id="final-rating">0</span>/100</div>
             </div>
             <div class="stat-box">
                 <h3>Sustainability</h3>
-                <p><span id="final-sustainability">0</span>% 
+                <div class="stat-value">
+                    <span id="final-sustainability">0</span>%
                     <span id="sustainability-badge" class="badge"></span>
-                </p>
+                </div>
             </div>
             <div class="stat-box">
                 <h3>Budget</h3>
-                <p>$<span id="final-spent">0</span> / $<span id="final-budget">0</span></p>
+                <div class="stat-value">$<span id="final-spent">0</span>/<span id="final-budget">0</span></div>
             </div>
         </div>
         
-        <div class="feedback" id="feedback-container">
-            <h3>Feedback</h3>
-            <p id="feedback-message"></p>
+        <div class="tabs">
+            <button class="tab active" data-tab="feedback">Feedback</button>
+            <button class="tab" data-tab="details">Details</button>
         </div>
         
-        <div class="requirements">
-            <h3>Requirements Check</h3>
-            <ul id="requirements-checklist"></ul>
-        </div>
-        
-        <div class="event-summary">
-            <h3>Event Summary</h3>
-            <ul class="summary-list">
-                <li><strong>Venue:</strong> <span id="venue-name"></span> ($<span id="venue-cost"></span>, <span id="venue-sustainability"></span>% sustainability)</li>
-                <li><strong>Quality Investment:</strong> $<span id="quality-investment"></span></li>
-                <li><strong>Marketing Investment:</strong> $<span id="marketing-investment"></span></li>
-                <li><strong>Staff Investment:</strong> $<span id="staff-investment"></span></li>
-                <li><strong>Items:</strong></li>
-            </ul>
-            <ul id="items-list" class="summary-list"></ul>
-        </div>
-        
-        <div class="xp-gain">
-            <h3>Experience Gained</h3>
-            <p>XP Earned: <span id="xp-earned">0</span></p>
-            <div class="progress-container">
-                <div id="xp-progress" class="progress-bar" style="width: 0%">0%</div>
+        <div id="feedback-tab" class="tab-content active">
+            <div class="feedback" id="feedback-container">
+                <p id="feedback-message"></p>
+            </div>
+            
+            <div class="collapsible-section">
+                <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                    <h3>Requirements Check</h3>
+                    <span class="collapsible-icon">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <ul id="requirements-checklist"></ul>
+                </div>
+            </div>
+            
+            <div class="xp-gain">
+                <h3>Experience Gained</h3>
+                <p>XP Earned: <span id="xp-earned">0</span></p>
+                <div class="progress-container">
+                    <div id="xp-progress" class="progress-bar" style="width: 0%"></div>
+                </div>
+            </div>
+            
+            <div class="level-up-msg" id="level-up-message">
+                Congratulations! You've reached Level <span id="new-level">2</span>!
+                <div style="margin-top: 5px; font-size: 0.9em;">New title: "<span id="new-title">Event Assistant</span>"</div>
             </div>
         </div>
         
-        <div class="level-up-msg" id="level-up-message">
-            Congratulations! You've reached Level <span id="new-level">2</span> and earned the title "<span id="new-title">Event Assistant</span>"!
+        <div id="details-tab" class="tab-content">
+            <div class="collapsible-section">
+                <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                    <h3>Venue</h3>
+                    <span class="collapsible-icon">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <p><strong id="venue-name"></strong></p>
+                    <p>Cost: $<span id="venue-cost"></span></p>
+                    <p>Sustainability: <span id="venue-sustainability"></span>%</p>
+                </div>
+            </div>
+            
+            <div class="collapsible-section">
+                <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                    <h3>Items</h3>
+                    <span class="collapsible-icon">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <ul id="items-list" class="summary-list"></ul>
+                </div>
+            </div>
         </div>
         
         <div class="btn-container">
@@ -312,6 +459,30 @@
     </div>
 
     <script>
+        // Toggle collapsible sections
+        function toggleCollapsible(header) {
+            header.classList.toggle('expanded');
+            const content = header.nextElementSibling;
+            content.style.display = content.style.display === 'block' ? 'none' : 'block';
+        }
+        
+        // Switch between tabs
+        function switchTab(event) {
+            const tabId = event.target.getAttribute('data-tab');
+            
+            // Update active tab
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Show selected tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tabId}-tab`).classList.add('active');
+        }
+        
         // Define player titles based on level
         const playerTitles = [
             { level: 1, title: "Planning Rookie" },
@@ -361,9 +532,6 @@
         const venueNameElement = document.getElementById('venue-name');
         const venueCostElement = document.getElementById('venue-cost');
         const venueSustainabilityElement = document.getElementById('venue-sustainability');
-        const qualityInvestmentElement = document.getElementById('quality-investment');
-        const marketingInvestmentElement = document.getElementById('marketing-investment');
-        const staffInvestmentElement = document.getElementById('staff-investment');
         const itemsListElement = document.getElementById('items-list');
         const xpEarnedElement = document.getElementById('xp-earned');
         const xpProgressElement = document.getElementById('xp-progress');
@@ -376,10 +544,14 @@
             // Try to load game state from localStorage
             const savedGameState = localStorage.getItem('gameState');
             if (savedGameState) {
-                const parsedState = JSON.parse(savedGameState);
-                gameState.playerLevel = parsedState.playerLevel || 1;
-                gameState.playerXP = parsedState.playerXP || 0;
-                gameState.xpToNextLevel = parsedState.xpToNextLevel || 100;
+                try {
+                    const parsedState = JSON.parse(savedGameState);
+                    gameState.playerLevel = parsedState.playerLevel || 1;
+                    gameState.playerXP = parsedState.playerXP || 0;
+                    gameState.xpToNextLevel = parsedState.xpToNextLevel || 100;
+                } catch (e) {
+                    console.error("Error parsing game state:", e);
+                }
             }
             
             // Make sure the values are at least the defaults
@@ -393,9 +565,9 @@
         
         // Update player stats with title
         function updatePlayerStats() {
-            playerLevelElement.textContent = gameState.playerLevel;
-            playerXPElement.textContent = gameState.playerXP;
-            xpNeededElement.textContent = gameState.xpToNextLevel;
+            if (playerLevelElement) playerLevelElement.textContent = gameState.playerLevel;
+            if (playerXPElement) playerXPElement.textContent = gameState.playerXP;
+            if (xpNeededElement) xpNeededElement.textContent = gameState.xpToNextLevel;
             
             // Set player title based on level
             const playerTitle = getPlayerTitle(gameState.playerLevel);
@@ -404,13 +576,15 @@
             }
             
             const xpProgress = (gameState.playerXP / gameState.xpToNextLevel) * 100;
-            statsXpProgressElement.style.width = `${xpProgress}%`;
-            
-            // Don't show text in the progress bar if it's too small
-            if (xpProgress < 10) {
-                statsXpProgressElement.textContent = "";
-            } else {
-                statsXpProgressElement.textContent = `${Math.round(xpProgress)}%`;
+            if (statsXpProgressElement) {
+                statsXpProgressElement.style.width = `${xpProgress}%`;
+                
+                // Don't show text in the progress bar if it's too small
+                if (xpProgress < 10) {
+                    statsXpProgressElement.textContent = "";
+                } else {
+                    statsXpProgressElement.textContent = `${Math.round(xpProgress)}%`;
+                }
             }
         }
         
@@ -418,6 +592,11 @@
         function init() {
             // Initialize game state
             initializeGameState();
+            
+            // Set up tab switching
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', switchTab);
+            });
             
             // Load event results from localStorage
             const eventResultsJSON = localStorage.getItem('eventResults');
@@ -428,47 +607,44 @@
                 return;
             }
             
-            const eventResults = JSON.parse(eventResultsJSON);
-            
-            // Display results
-            displayResults(eventResults);
-            
-            // Add some randomness to the final rating and sustainability
-            applyRandomVariation(eventResults);
-            
-            // Process the event outcome
-            processEventOutcome(eventResults);
-            
-            // Save game state when leaving the page
-            window.addEventListener('beforeunload', function() {
-                localStorage.setItem('gameState', JSON.stringify(gameState));
-            });
+            try {
+                const eventResults = JSON.parse(eventResultsJSON);
+                
+                // Display results
+                displayResults(eventResults);
+                
+                // Add some randomness to the final rating and sustainability
+                applyRandomVariation(eventResults);
+                
+                // Process the event outcome
+                processEventOutcome(eventResults);
+                
+                // Save game state when leaving the page
+                window.addEventListener('beforeunload', function() {
+                    localStorage.setItem('gameState', JSON.stringify(gameState));
+                });
+            } catch (e) {
+                console.error("Error processing event results:", e);
+                feedbackMessageElement.textContent = "There was an error processing your event results. Please try again.";
+            }
         }
         
         // Display event results
         function displayResults(results) {
             // Set event title
-            eventTitleElement.textContent = results.event.title;
+            if (eventTitleElement) eventTitleElement.textContent = results.event.title;
             
             // Set budget information
-            finalBudgetElement.textContent = results.event.budget;
-            finalSpentElement.textContent = results.totalCost;
-            
-            // Set investments
-            qualityInvestmentElement.textContent = results.quality;
-            marketingInvestmentElement.textContent = results.marketing || 0;
-            staffInvestmentElement.textContent = results.staff || 0;
+            if (finalBudgetElement) finalBudgetElement.textContent = results.event.budget;
+            if (finalSpentElement) finalSpentElement.textContent = results.totalCost;
             
             // Set venue information
-            venueNameElement.textContent = results.venue.title;
-            venueCostElement.textContent = results.venue.cost;
-            venueSustainabilityElement.textContent = results.venue.sustainability;
+            if (venueNameElement) venueNameElement.textContent = results.venue.title;
+            if (venueCostElement) venueCostElement.textContent = results.venue.cost;
+            if (venueSustainabilityElement) venueSustainabilityElement.textContent = results.venue.sustainability;
             
             // Display items
             displayItems(results.items);
-            
-            // Display requirements checklist
-            displayRequirements(results.event.requirements, results.items, results.missingRequirements);
         }
         
         // Apply random variation to make results feel dynamic
@@ -482,8 +658,8 @@
             const finalSustainability = Math.max(0, Math.min(100, results.sustainability + sustainabilityVariance));
             
             // Display final values
-            finalRatingElement.textContent = finalRating;
-            finalSustainabilityElement.textContent = finalSustainability;
+            if (finalRatingElement) finalRatingElement.textContent = finalRating;
+            if (finalSustainabilityElement) finalSustainabilityElement.textContent = finalSustainability;
             
             // Set sustainability badge
             let badge = "";
@@ -503,8 +679,10 @@
                 badgeClass = "badge-bronze";
             }
             
-            sustainabilityBadgeElement.textContent = badge;
-            sustainabilityBadgeElement.className = `badge ${badgeClass}`;
+            if (sustainabilityBadgeElement) {
+                sustainabilityBadgeElement.textContent = badge;
+                sustainabilityBadgeElement.className = `badge ${badgeClass}`;
+            }
             
             // Update results object with final values
             results.finalRating = finalRating;
@@ -513,6 +691,8 @@
         
         // Display items in the summary
         function displayItems(items) {
+            if (!itemsListElement) return;
+            
             itemsListElement.innerHTML = '';
             
             if (items.length === 0) {
@@ -564,6 +744,8 @@
         
         // Display requirements checklist with clearer indicators
         function displayRequirements(requirements, items, missingRequirements) {
+            if (!requirementsChecklistElement) return;
+            
             requirementsChecklistElement.innerHTML = '';
             
             requirements.forEach(req => {
@@ -598,15 +780,23 @@
             const hasAllRequirements = !results.missingRequirements || results.missingRequirements.length === 0;
             
             // Set result status
-            if (results.finalSustainability >= 50) {
-                if (hasAllRequirements) {
-                    resultStatusElement.innerHTML = '<h3 style="color: green;">Event Successful!</h3>';
+            if (resultStatusElement) {
+                if (results.finalSustainability >= 50) {
+                    if (hasAllRequirements) {
+                        resultStatusElement.innerHTML = 'Success!';
+                        resultStatusElement.className = 'result-status status-success';
+                    } else {
+                        resultStatusElement.innerHTML = 'Partial';
+                        resultStatusElement.className = 'result-status status-partial';
+                    }
                 } else {
-                    resultStatusElement.innerHTML = '<h3 style="color: orange;">Event Partially Successful</h3>';
+                    resultStatusElement.innerHTML = 'Failed';
+                    resultStatusElement.className = 'result-status status-failed';
                 }
-            } else {
-                resultStatusElement.innerHTML = '<h3 style="color: red;">Event Failed!</h3>';
             }
+            
+            // Display requirements checklist
+            displayRequirements(results.event.requirements, results.items, results.missingRequirements);
             
             // Calculate XP earned with penalty for missing requirements
             let xpEarned = calculateXP(results, results.finalSustainability >= 50);
@@ -626,7 +816,9 @@
                             <p><strong>Attendee Feedback:</strong> Several attendees complained about the lack of ${missingItems}. This reduced your XP gain from ${originalXP} to ${xpEarned}.</p>
                         </div>
                     `;
-                    feedbackMessageElement.innerHTML += requirementFeedback;
+                    if (feedbackMessageElement) {
+                        feedbackMessageElement.innerHTML += requirementFeedback;
+                    }
                 }
             }
             
@@ -643,10 +835,13 @@
             checkLevelUp();
             
             // Update XP display
-            xpEarnedElement.textContent = xpEarned;
+            if (xpEarnedElement) xpEarnedElement.textContent = xpEarned;
+            
             const xpProgress = (gameState.playerXP / gameState.xpToNextLevel) * 100;
-            xpProgressElement.style.width = `${xpProgress}%`;
-            xpProgressElement.textContent = `${Math.round(xpProgress)}%`;
+            if (xpProgressElement) {
+                xpProgressElement.style.width = `${xpProgress}%`;
+                xpProgressElement.textContent = `${Math.round(xpProgress)}%`;
+            }
             
             // Update player stats display again after potential level up
             updatePlayerStats();
@@ -694,12 +889,13 @@
         
         // Set feedback message
         function setFeedbackMessage(results, isSuccessful) {
+            if (!feedbackMessageElement) return;
+            
             if (isSuccessful) {
                 // Determine the strongest and weakest aspects
                 const aspects = [
                     { name: "venue choice", value: results.venue.sustainability },
                     { name: "item selection", value: getItemsAverageSustainability(results.items) },
-                    { name: "quality investment", value: results.quality > 50 ? 80 : 50 },
                     { name: "budget management", value: results.totalCost <= results.event.budget ? 90 : 40 }
                 ];
                 
@@ -708,28 +904,28 @@
                 const strongestAspect = aspects[0].name;
                 const weakestAspect = aspects[aspects.length - 1].name;
                 
-                let message = `Great job! The event was successful with a ${results.finalRating}/100 rating and ${results.finalSustainability}% sustainability score.`;
+                let message = `<strong>Great job!</strong> The event was successful with a ${results.finalRating}/100 rating and ${results.finalSustainability}% sustainability score.`;
                 
                 // Add feedback about strongest and weakest aspects
                 message += ` Your ${strongestAspect} was particularly strong, but you could improve your ${weakestAspect}.`;
                 
                 // Add feedback about rating if low
                 if (results.finalRating < 60) {
-                    message += " The attendees thought the event was a bit basic. Consider investing more in quality next time.";
+                    message += " <br><br>The attendees thought the event was a bit basic. Consider adding higher-quality items next time.";
                 }
                 
                 // Add feedback about over-budget
                 if (results.totalCost > results.event.budget) {
-                    message += ` You went over budget by $${results.totalCost - results.event.budget}, which reduced your XP gain.`;
+                    message += ` <br><br>You went over budget by ${results.totalCost - results.event.budget}, which reduced your XP gain.`;
                 }
                 
                 feedbackMessageElement.innerHTML = message;
             } else {
                 // Failed event
                 if (results.finalSustainability < 50) {
-                    feedbackMessageElement.innerHTML = `The event did not meet minimum sustainability requirements. You achieved only ${results.finalSustainability}%. Aim for at least Bronze (50%) sustainability by choosing more sustainable items and venues.`;
+                    feedbackMessageElement.innerHTML = `<strong>Event Failed:</strong> The event did not meet minimum sustainability requirements. You achieved only ${results.finalSustainability}%. Aim for at least Bronze (50%) sustainability by choosing more sustainable items and venues.`;
                 } else {
-                    feedbackMessageElement.innerHTML = "You didn't include all required items for the event. Check the requirements list and make sure you include items that match each requirement.";
+                    feedbackMessageElement.innerHTML = "<strong>Event Failed:</strong> You didn't include all required items for the event. Check the requirements list and make sure you include items that match each requirement.";
                 }
             }
         }
@@ -751,12 +947,16 @@
                 gameState.xpToNextLevel = Math.floor(gameState.xpToNextLevel * 1.5);
                 
                 // Show level up message
-                levelUpMessageElement.style.display = 'block';
-                newLevelElement.textContent = gameState.playerLevel;
-                newTitleElement.textContent = newTitle;
+                if (levelUpMessageElement) {
+                    levelUpMessageElement.style.display = 'block';
+                    if (newLevelElement) newLevelElement.textContent = gameState.playerLevel;
+                    if (newTitleElement) newTitleElement.textContent = newTitle;
+                }
                 
                 // Update player title
-                playerTitleElement.textContent = newTitle;
+                if (playerTitleElement) {
+                    playerTitleElement.textContent = newTitle;
+                }
                 
                 // Show level up alert
                 setTimeout(() => {
@@ -767,6 +967,17 @@
         
         // Initialize when the page loads
         document.addEventListener('DOMContentLoaded', init);
+        
+        // Auto-expand the first collapsible section when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Expand the first collapsible section after a short delay
+            setTimeout(() => {
+                const firstCollapsible = document.querySelector('.collapsible-header');
+                if (firstCollapsible) {
+                    toggleCollapsible(firstCollapsible);
+                }
+            }, 200);
+        });
     </script>
 </body>
 </html>

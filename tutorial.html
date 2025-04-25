@@ -15,20 +15,48 @@
             --white: #ffffff;
         }
         
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--light-color);
             color: var(--text-color);
-            touch-action: manipulation;
             max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 12px;
+            font-size: 16px;
+            line-height: 1.5;
         }
         
         h1, h2, h3 {
             color: var(--primary-color);
+            margin: 1em 0 0.5em 0;
+        }
+        
+        h1 {
+            font-size: 1.6em;
+            margin-top: 0.5em;
+            text-align: center;
+        }
+        
+        h2 {
+            font-size: 1.3em;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 8px;
+            margin-top: 20px;
+        }
+        
+        h3 {
+            font-size: 1.1em;
+            margin-top: 15px;
+        }
+        
+        p {
+            margin-bottom: 12px;
         }
         
         .container {
@@ -36,45 +64,92 @@
             border-radius: 8px;
             padding: 20px;
             margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         
         .btn {
             background-color: var(--primary-color);
             color: var(--white);
             border: none;
-            padding: 10px 20px;
+            padding: 12px 20px;
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
-            margin: 15px 0;
+            font-weight: bold;
+            margin: 10px 5px;
             transition: background-color 0.3s;
             display: inline-block;
             text-decoration: none;
+            text-align: center;
         }
         
         .btn:hover {
             background-color: var(--dark-color);
         }
         
-        .tutorial-section {
-            margin-bottom: 25px;
+        .btn-container {
+            text-align: center;
+            margin-top: 25px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
-        .rating-box {
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 1px;
+        }
+        
+        .tab {
+            padding: 8px 15px;
+            cursor: pointer;
             background-color: var(--light-color);
-            padding: 10px;
-            border-radius: 4px;
-            margin: 10px 0;
+            border: none;
+            border-radius: 4px 4px 0 0;
+            font-size: 0.9em;
+            transition: background-color 0.2s;
+        }
+        
+        .tab.active {
+            background-color: var(--secondary-color);
+            color: var(--white);
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .info-box {
+            background-color: var(--light-color);
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .info-box h3 {
+            margin-top: 0;
+            color: var(--dark-color);
         }
         
         .badge {
             display: inline-block;
             padding: 3px 8px;
             border-radius: 12px;
-            font-size: 12px;
+            font-size: 14px;
             font-weight: bold;
-            margin-left: 5px;
+            margin: 3px;
         }
         
         .badge-bronze {
@@ -97,73 +172,325 @@
             color: black;
         }
         
-        .btn-container {
+        .item-example {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .item-card {
+            background-color: var(--light-color);
+            border-radius: 6px;
+            padding: 10px;
+            width: 150px;
+            font-size: 0.85em;
+        }
+        
+        .item-card h4 {
+            margin: 0 0 5px 0;
+            color: var(--primary-color);
+        }
+        
+        .step-list {
+            padding-left: 25px;
+            margin: 15px 0;
+        }
+        
+        .step-list li {
+            margin-bottom: 10px;
+        }
+        
+        .icon {
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+        
+        .tip-box {
+            border-left: 4px solid var(--accent-color);
+            background-color: rgba(255, 235, 59, 0.1);
+            padding: 10px 15px;
+            margin: 15px 0;
+        }
+        
+        .tip-box h3 {
+            color: #5d4037;
+            margin-top: 0;
+        }
+        
+        img.tutorial-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+        }
+        
+        .gameplay-flow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+            max-width: 100%;
+            overflow-x: auto;
+        }
+        
+        .flow-item {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin: 5px 0;
             text-align: center;
-            margin-top: 20px;
+            width: 100%;
+            max-width: 200px;
+        }
+        
+        .flow-arrow {
+            color: var(--primary-color);
+            font-size: 24px;
+            margin: 5px 0;
+        }
+        
+        @media (min-width: 600px) {
+            .gameplay-flow {
+                flex-direction: row;
+                justify-content: center;
+            }
+            
+            .flow-item {
+                margin: 0 5px;
+            }
+            
+            .flow-arrow {
+                transform: rotate(90deg);
+                margin: 0 10px;
+            }
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .feature-card {
+            background-color: var(--light-color);
+            border-radius: 6px;
+            padding: 15px;
+        }
+        
+        .feature-card h3 {
+            margin-top: 0;
+            color: var(--dark-color);
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>How to Play</h1>
+        <h1>How to Play Sustainable Event Organizer</h1>
         
-        <div class="tutorial-section">
-            <h2>Game Objective</h2>
-            <p>You are an event organizer who must plan successful, sustainable events while managing your budget. Your goal is to level up by gaining experience points (XP) from successfully organizing events.</p>
+        <div class="tabs">
+            <button class="tab active" data-tab="basics">Basics</button>
+            <button class="tab" data-tab="gameplay">Gameplay</button>
+            <button class="tab" data-tab="advanced">Advanced Tips</button>
         </div>
         
-        <div class="tutorial-section">
-            <h2>Key Concepts</h2>
-            <h3>Sustainability Rating</h3>
-            <p>Each event needs at least a Bronze rating (50%) to succeed. Your sustainability rating is based on the items you choose for your event.</p>
+        <div id="basics-tab" class="tab-content active">
+            <h2>Game Overview</h2>
+            <p>In <strong>Sustainable Event Organizer</strong>, you are an event planner who must organize successful, sustainable events while managing your budget. Each event you plan will earn you XP to level up and unlock larger, more complex events.</p>
             
-            <div class="rating-box">
-                <h4>Rating Levels:</h4>
-                <p><span class="badge badge-platinum">Platinum</span> 95% or above</p>
-                <p><span class="badge badge-gold">Gold</span> 90% or above</p>
-                <p><span class="badge badge-silver">Silver</span> 75% or above</p>
-                <p><span class="badge badge-bronze">Bronze</span> 50% or above</p>
-                <p>Below 50%: <strong>Fail</strong></p>
+            <div class="gameplay-flow">
+                <div class="flow-item">Choose Event</div>
+                <div class="flow-arrow">⬇</div>
+                <div class="flow-item">Select Venue</div>
+                <div class="flow-arrow">⬇</div>
+                <div class="flow-item">Plan Items</div>
+                <div class="flow-arrow">⬇</div>
+                <div class="flow-item">Host Event</div>
+                <div class="flow-arrow">⬇</div>
+                <div class="flow-item">Get Results</div>
             </div>
             
-            <h3>Requirements</h3>
-            <p>Each event has specific items you must include. For example, a workshop might require tables, chairs, and craft supplies. You must include items that satisfy all requirements to succeed.</p>
+            <h2>Key Concepts</h2>
             
-            <h3>Budget</h3>
-            <p>Trying to stay within budget will maximize your XP earnings. Going over budget will reduce your XP, but sometimes it's necessary to achieve high sustainability ratings.</p>
+            <div class="info-box">
+                <h3>Sustainability Rating</h3>
+                <p>Each event needs at least a <span class="badge badge-bronze">Bronze</span> rating (50% sustainability) to succeed. Your sustainability score comes from:</p>
+                <ul>
+                    <li>Venue sustainability rating</li>
+                    <li>Average sustainability of all items you choose</li>
+                </ul>
+                
+                <p>Sustainability ratings include:</p>
+                <div style="margin-top: 5px;">
+                    <span class="badge badge-platinum">Platinum</span> 95% or above<br>
+                    <span class="badge badge-gold">Gold</span> 90% or above<br>
+                    <span class="badge badge-silver">Silver</span> 75% or above<br>
+                    <span class="badge badge-bronze">Bronze</span> 50% or above<br>
+                    <span style="margin-left: 8px;">Below 50%: <strong>Fail</strong></span>
+                </div>
+            </div>
             
-            <h3>Quality Investment</h3>
-            <p>You can invest extra money to improve the quality of your event, which increases attendee ratings but costs more.</p>
+            <div class="info-box">
+                <h3>Event Requirements</h3>
+                <p>Each event has specific items you <strong>must include</strong>. For example, a workshop might require tables, chairs, and craft supplies.</p>
+                <p>Missing requirements will lower your rating and XP earnings considerably.</p>
+            </div>
+            
+            <div class="info-box">
+                <h3>Budget Management</h3>
+                <p>Each event has a budget. Staying within budget maximizes your XP earnings. Going over budget will reduce your XP, but sometimes it's necessary to achieve high sustainability ratings.</p>
+            </div>
         </div>
         
-        <div class="tutorial-section">
-            <h2>Gameplay</h2>
-            <ol>
-                <li>You'll be assigned an event with specific requirements, budget, and expected attendees.</li>
-                <li>Read the event description and requirements carefully.</li>
-                <li>Purchase necessary items to meet the requirements from the available options.</li>
-                <li>Adjust quality investment to improve attendee ratings.</li>
-                <li>Balance your spending with sustainability ratings.</li>
-                <li>Finish planning to see your results.</li>
-                <li>Successful events earn you XP and profit.</li>
-                <li>Level up to unlock bigger events with larger budgets.</li>
+        <div id="gameplay-tab" class="tab-content">
+            <h2>How To Play</h2>
+            
+            <ol class="step-list">
+                <li><strong>Choose an Event</strong> - Select an event based on your current level. Higher level events offer more XP but are more complex.</li>
+                
+                <li><strong>Select a Venue</strong> - Choose an appropriate venue for your event. Consider:
+                    <ul>
+                        <li>Capacity (must fit your attendees)</li>
+                        <li>Sustainability rating (higher is better)</li>
+                        <li>Cost (affects your budget)</li>
+                        <li>Suitability for your event type (highlighted venues are recommended)</li>
+                    </ul>
+                </li>
+                
+                <li><strong>Plan Your Event</strong> - Select items for your event:
+                    <ul>
+                        <li>Make sure to include all required items (highlighted)</li>
+                        <li>Choose items with higher sustainability ratings when possible</li>
+                        <li>Monitor your budget with the floating counter</li>
+                    </ul>
+                </li>
+                
+                <li><strong>Review Summary</strong> - Check your event summary to make sure you've met all requirements and your sustainability score is at least 50%.</li>
+                
+                <li><strong>Host the Event</strong> - Submit your plan and see your results!</li>
+                
+                <li><strong>Earn XP and Level Up</strong> - Successful events earn XP. When you level up, you'll unlock new events and gain a new title.</li>
             </ol>
+            
+            <div class="info-box">
+                <h3>Example Items</h3>
+                <p>Different items have different costs, ratings, and sustainability scores:</p>
+                <div class="item-example">
+                    <div class="item-card">
+                        <h4>Folding Table</h4>
+                        <div>Cost: $20</div>
+                        <div>Rating: 5/10</div>
+                        <div>Sustainability: 60%</div>
+                    </div>
+                    
+                    <div class="item-card">
+                        <h4>Recycled Flyers</h4>
+                        <div>Cost: $15</div>
+                        <div>Rating: 5/10</div>
+                        <div>Sustainability: 85%</div>
+                    </div>
+                    
+                    <div class="item-card">
+                        <h4>LED Stage Lights</h4>
+                        <div>Cost: $120</div>
+                        <div>Rating: 8/10</div>
+                        <div>Sustainability: 80%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tip-box">
+                <h3>Quick Tips</h3>
+                <ul>
+                    <li>Smaller venues are generally more energy-efficient</li>
+                    <li>The green indicator on the summary button turns green when all requirements are met</li>
+                    <li>You can search and filter items by category</li>
+                    <li>Your floating budget counter turns red if you go over budget</li>
+                </ul>
+            </div>
         </div>
         
-        <div class="tutorial-section">
-            <h2>Tips</h2>
-            <ul>
-                <li>Items with higher sustainability ratings cost more but help you achieve better sustainability scores.</li>
-                <li>Always check if you've satisfied all requirements before finishing.</li>
-                <li>Try to balance quality and sustainability - both affect your final XP.</li>
-                <li>As you level up, save money for bigger events that will require more expensive items.</li>
-            </ul>
+        <div id="advanced-tab" class="tab-content">
+            <h2>Advanced Strategies</h2>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>Balancing Budget and Sustainability</h3>
+                    <p>The most sustainable items often cost more. For best results, invest in a few high-sustainability items rather than many low-sustainability ones.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>Venue Selection</h3>
+                    <p>Choose smaller venues when possible - they have higher size efficiency and better sustainability ratings. The venue can contribute significantly to your overall sustainability.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>Requirement Priorities</h3>
+                    <p>Focus on meeting all requirements first with basic items, then upgrade to more sustainable versions if budget allows.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>XP Optimization</h3>
+                    <p>To maximize XP gain, aim for at least Silver sustainability rating while staying within budget. Going over budget can be offset by achieving Platinum sustainability.</p>
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <h3>Understanding Success Factors</h3>
+                <p>Your success is determined by:</p>
+                <ul>
+                    <li><strong>Sustainability Score:</strong> Must be at least 50% to succeed</li>
+                    <li><strong>Requirements Met:</strong> All requirements must be met for full XP</li>
+                    <li><strong>Budget Management:</strong> Staying within budget earns bonus XP</li>
+                    <li><strong>Attendee Rating:</strong> Higher ratings earn more XP</li>
+                </ul>
+            </div>
+            
+            <div class="tip-box">
+                <h3>Pro Tips</h3>
+                <ul>
+                    <li>It's generally better to go over budget than to fail the sustainability requirement</li>
+                    <li>Higher-level events provide exponentially more XP but have stricter requirements</li>
+                    <li>Don't forget to check the floating indicator to ensure all requirements are met</li>
+                    <li>The most sustainable combination of items and venue can sometimes offset a higher cost</li>
+                </ul>
+            </div>
         </div>
         
         <div class="btn-container">
             <a href="index.html" class="btn">Back to Menu</a>
-           <a href="events.html" class="btn">Start Game</a>
+            <a href="events.html" class="btn">Start Playing</a>
         </div>
     </div>
+
+    <script>
+        // Switch between tabs
+        function switchTab(event) {
+            const tabId = event.target.getAttribute('data-tab');
+            
+            // Update active tab
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Show selected tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tabId}-tab`).classList.add('active');
+        }
+        
+        // Initialize when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up tab switching
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', switchTab);
+            });
+        });
+    </script>
 </body>
 </html>
