@@ -4,6 +4,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sustainable Event Organizer</title>
+	<style>
+    /* Floating star button */
+    #ach-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      background: url('star.png') no-repeat center;
+      background-size: contain;
+      cursor: pointer;
+      z-index: 10000;
+    }
+    /* Overlay behind modal */
+    #ach-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      z-index: 9998;
+    }
+    /* Achievement modal */
+    #ach-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      max-width: 90%;
+      max-height: 80%;
+      overflow-y: auto;
+      display: none;
+      z-index: 9999;
+    }
+    #ach-modal h2 { margin-top: 0; }
+    .ach-item {
+      display: flex;
+      align-items: center;
+      margin: 8px 0;
+    }
+    .ach-item.locked { opacity: 0.4; }
+    .ach-item img {
+      width: 24px;
+      margin-right: 8px;
+    }
+    /* Popup toast */
+    .ach-toast {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      animation: slideIn 0.5s, slideOut 0.5s 2.5s;
+      z-index: 10001;
+    }
+    @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+    @keyframes slideOut { to { transform: translateX(100%); } }
+  </style>
     <style>
         :root {
             --primary-color: #2e7d32;
@@ -1224,3 +1292,132 @@
         
         // Add a timeout to check elements after DOM is fully loaded
         setTimeout(checkElements, 1000);
+		<!-- Achievements Button & Modal -->
+  <div id="ach-btn" title="Achievements"></div>
+  <div id="ach-overlay"></div>
+  <div id="ach-modal">
+    <button id="ach-close" style="float:right;font-size:16px;">×</button>
+    <h2>Achievements</h2>
+    <div id="ach-list"></div>
+  </div>
+
+  <script>
+    /* ===== Achievement System ===== */
+    window.AchievementSystem = (function(){
+      const KEY = 'ach_unlocked';
+      let unlocked = JSON.parse(localStorage.getItem(KEY) || '[]');
+
+      // Define achievements
+      const achievements = [
+        { id: 'enemyCFO',    name: 'Enemy of the CFO',    desc: 'Go over budget 3 times', condition: () => (parseInt(localStorage.getItem('cnt_overBudget')||0) >= 3) },
+        { id: 'minimalist',  name: 'The Minimalist',      desc: 'Host an event with nothing', condition: () => {
+            const r = JSON.parse(localStorage.getItem('eventResults')||'{}');
+            return r.items && r.items.length === 0;
+          }
+        },
+        { id: 'goodNumbers', name: 'Good with Numbers',    desc: 'Save $1000 total',       condition: () => (parseInt(localStorage.getItem('sum_saved')||0) >= 1000) },
+        // 5 more:
+        { id: 'ecoChampion', name: 'Eco Champion',         desc: '≥90% sustainability 3 times', condition: () => (parseInt(localStorage.getItem('cnt_eco90')||0) >= 3) },
+        { id: 'budgetWizard',name: 'Budget Wizard',        desc: 'Finish 3 events ≥20% under budget', condition: () => (parseInt(localStorage.getItem('cnt_under20')||0) >= 3) },
+        { id: 'levelMaster', name: 'Level Master',         desc: 'Reach player level 5',    condition: () => (parseInt(localStorage.getItem('max_level')||0) >= 5) },
+        { id: 'socialite',   name: 'Social Butterfly',     desc: 'Host an event ≥75 attendees', condition: () => (parseInt(localStorage.getItem('cnt_bigEvent')||0) >= 1) },
+        { id: 'supplyGuru',  name: 'Supply Guru',         desc: 'Purchase 10 items total', condition: () => (parseInt(localStorage.getItem('sum_items')||0) >= 10) }
+      ];
+
+      // Save to localStorage
+      function save() { localStorage.setItem(KEY, JSON.stringify(unlocked)); }
+
+      // Check each achievement
+      function checkAll() {
+        achievements.forEach(a => {
+          if (!unlocked.includes(a.id) && a.condition()) {
+            unlocked.push(a.id);
+            save();
+            showToast(a.name);
+          }
+        });
+      }
+
+      // Show popup toast
+      function showToast(name) {
+        const t = document.createElement('div');
+        t.className = 'ach-toast';
+        t.innerHTML = `<img src='star.png' alt=''/> Unlocked: <strong>${name}</strong>`;
+        document.body.append(t);
+        setTimeout(() => t.remove(), 3000);
+      }
+
+      // Render modal list
+      function render() {
+        const list = document.getElementById('ach-list');
+        list.innerHTML = '';
+        achievements.forEach(a => {
+          const div = document.createElement('div');
+          div.className = 'ach-item' + (unlocked.includes(a.id)? '' : ' locked');
+          div.innerHTML = `<img src='star.png'/> <strong>${a.name}</strong> - ${a.desc}`;
+          list.append(div);
+        });
+      }
+
+      // Public init
+      function init() {
+        // Button handlers
+        document.getElementById('ach-btn').onclick = () => {
+          document.getElementById('ach-overlay').style.display = 'block';
+          document.getElementById('ach-modal').style.display   = 'block';
+          render();
+        };
+        document.getElementById('ach-close').onclick = () => {
+          document.getElementById('ach-overlay').style.display = 'none';
+          document.getElementById('ach-modal').style.display   = 'none';
+        };
+        document.getElementById('ach-overlay').onclick = () => document.getElementById('ach-close').click();
+
+        // Initial check
+        checkAll();
+      }
+
+      // Hook into your results pipeline: call with the results object
+      function handleEvent(results) {
+        // results: { totalCost, budget, sustainability, attendees, items: [] }
+        // 1) Over budget count
+        if (results.totalCost > results.budget) {
+          const c = parseInt(localStorage.getItem('cnt_overBudget')||0) + 1;
+          localStorage.setItem('cnt_overBudget', c);
+        }
+        // 2) Sum saved
+        const saved = (results.budget - results.totalCost) > 0 ? (results.budget - results.totalCost) : 0;
+        localStorage.setItem('sum_saved', parseInt(localStorage.getItem('sum_saved')||0) + saved);
+        // 3) Eco 90%
+        if (results.sustainability >= 90) {
+          const c = parseInt(localStorage.getItem('cnt_eco90')||0) + 1;
+          localStorage.setItem('cnt_eco90', c);
+        }
+        // 4) Under budget 20%
+        if (results.budget - results.totalCost >= results.budget * 0.2) {
+          const c = parseInt(localStorage.getItem('cnt_under20')||0) + 1;
+          localStorage.setItem('cnt_under20', c);
+        }
+        // 5) Big event
+        if (results.attendees >= 75) {
+          localStorage.setItem('cnt_bigEvent', 1);
+        }
+        // 6) Items total
+        localStorage.setItem('sum_items', parseInt(localStorage.getItem('sum_items')||0) + results.items.length);
+        // 7) Max level
+        const lvl = parseInt(localStorage.getItem('max_level')||0);
+        localStorage.setItem('max_level', Math.max(lvl, results.event.level || 0));
+
+        // Finally, re-check all achievements
+        checkAll();
+      }
+
+      return { init, handleEvent };
+    })();
+
+    document.addEventListener('DOMContentLoaded', () => {
+      window.AchievementSystem.init();
+      // On your results page, after loading eventResults:
+      // AchievementSystem.handleEvent(JSON.parse(localStorage.getItem('eventResults')));
+    });
+  </script>
